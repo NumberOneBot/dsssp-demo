@@ -59,11 +59,11 @@ const SliderInput = ({
 
   const fillStart = percentage < zeroPercentage ? percentage : zeroPercentage
   const fillEnd = percentage < zeroPercentage ? zeroPercentage : percentage
-  const fillColor = colors.sky[300] /*log
+  const fillColor = log
     ? colors.cyan[700]
     : value > 0
       ? colors.green[700]
-      : colors.red[800]*/
+      : colors.red[800]
 
   return (
     <div>

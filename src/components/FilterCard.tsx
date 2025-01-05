@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FilterChangeEvent, type GraphFilter } from 'dsssp'
+import tailwindColors from 'tailwindcss/colors'
 import clsx from 'clsx'
 
 import { FilterInput, FilterSelect, SliderInput } from '.'
@@ -49,8 +50,6 @@ const FilterCard = ({
   onEnter?: (event: FilterChangeEvent) => void
   onChange: (event: FilterChangeEvent) => void
 }) => {
-  const iconColor = filterColors[index] || '#FFFFFF'
-
   const [noiseDataUrl, setNoiseDataUrl] = useState<string>('')
 
   useEffect(() => {
@@ -58,6 +57,12 @@ const FilterCard = ({
     setNoiseDataUrl(noise)
   }, [])
 
+  const color =
+    filter.type === 'BYPASS'
+      ? tailwindColors.slate[400]
+      : filterColors[index].active || '#FFFFFF'
+
+  console.log('color', color)
   return (
     <div
       onMouseEnter={() => onEnter?.({ index })}
@@ -73,8 +78,8 @@ const FilterCard = ({
       }}
     >
       <FilterSelect
+        color={color}
         filter={filter}
-        color={active ? iconColor.active : iconColor.point}
         onChange={(type) => onChange({ index, type })}
       />
 
@@ -88,8 +93,8 @@ const FilterCard = ({
 
       <div className="flex flex-row gap-2 w-full">
         <SliderInput
-          max={6}
-          min={-6}
+          max={10}
+          min={-10}
           step={0.1}
           label="Gain"
           value={filter.gain}

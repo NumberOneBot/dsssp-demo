@@ -1,8 +1,8 @@
 const scale = {
-  sampleRate: 48000,
-  dbSteps: 2,
-  minGain: -8,
-  maxGain: 8
+  sampleRate: 44100,
+  dbSteps: 4,
+  minGain: -12,
+  maxGain: 12
 }
 
 export default scale

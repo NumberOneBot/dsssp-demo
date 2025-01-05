@@ -14,8 +14,10 @@ const theme: GraphThemeOverride = {
     tracker: { labelColor: colors.white, lineColor: colors.zinc[400] }
   },
   filters: {
+    gradientOpacity: 0.75,
+    zeroPoint: { color: colors.slate[400], background: colors.slate[500] },
     point: { label: { color: 'white' }, backgroundOpacity: { drag: 1 } },
-    curve: { width: { active: 1 }, opacity: { normal: 0.5, active: 1 } },
+    curve: { width: { active: 1 }, opacity: { normal: 0.75, active: 1 } },
     colors: filterColors
   }
 }

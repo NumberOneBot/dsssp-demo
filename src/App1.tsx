@@ -14,16 +14,18 @@ import { AppHeaderBar, FilterCard } from './components'
 
 import styles from './App1.module.css'
 
-import customFilters from './configs/filters'
+import { customPreset } from './configs/presets'
 import theme from './configs/theme'
 import scale from './configs/scale'
 
 function App() {
-  const [filters, setFilters] = useState(customFilters)
+  const [filters, setFilters] = useState(customPreset)
+  const [presetCache, setPresetCache] = useState(customPreset)
   const [dragging, setDragging] = useState(false)
   const [activeIndex, setActiveIndex] = useState<number>(-1)
 
-  const handleFilterChange = ({ index, ...filter }: FilterChangeEvent) => {
+  const handleFilterChange = ({ index, ...filterEvent }: FilterChangeEvent) => {
+    const { ended, ...filter } = filterEvent
     setFilters((prevFilters) => {
       const newFilters = [...prevFilters]
       newFilters[index] = { ...newFilters[index], ...filter }
@@ -31,9 +33,9 @@ function App() {
     })
   }
 
-  const getLabel = (index: number) => {
-    return String.fromCharCode(65 + index)
-  }
+  // const getLabel = (index: number) => {
+  //   return String.fromCharCode(65 + index)
+  // }
 
   const handleMouseLeave = () => {
     if (!dragging) setActiveIndex(-1)
@@ -43,8 +45,17 @@ function App() {
     if (!dragging) setActiveIndex(index)
   }
 
-  const handlePresetChange = (filters: GraphFilter[]) => {
-    console.log('preset change', filters)
+  const handlePresetChange = (
+    newFilters: GraphFilter[],
+    newIndex: number,
+    prevIndex: number
+  ) => {
+    // cache `custom` preset (index = 0)
+    if (prevIndex === 0) setPresetCache(filters)
+
+    // restore `custom` preset from cache
+    // or load new preset
+    setFilters(newIndex === 0 ? presetCache : newFilters)
   }
 
   return (
@@ -59,33 +70,34 @@ function App() {
             theme={theme}
             scale={scale}
           >
-            {filters.map((filter, i) => (
-              <FilterGradient
-                key={i}
-                index={i}
-                filter={filter}
-                id={`filter-${i}`}
-              />
-            ))}
+            {filters.map((filter, index) => (
+              <>
+                <FilterGradient
+                  fill
+                  key={index}
+                  index={index}
+                  filter={filter}
+                  id={`filter-${index}`}
+                />
 
-            {filters.map((filter, i) => (
-              <FilterCurve
-                key={i}
-                showPin
-                index={i}
-                filter={filter}
-                active={activeIndex === i}
-                gradientId={`filter-${i}`}
-              />
+                <FilterCurve
+                  showPin
+                  key={index}
+                  index={index}
+                  filter={filter}
+                  active={activeIndex === index}
+                  gradientId={`filter-${index}`}
+                />
+              </>
             ))}
             <CompositeCurve filters={filters} />
-            {filters.map((filter, i) => (
+            {filters.map((filter, index) => (
               <FilterPoint
-                key={i}
-                index={i}
+                key={index}
+                index={index}
                 filter={filter}
-                active={activeIndex === i}
-                // label={getLabel(i)}
+                // label={getLabel(index)}
+                active={activeIndex === index}
                 onDrag={setDragging}
                 onEnter={handleMouseEnter}
                 onLeave={handleMouseLeave}
