@@ -62,7 +62,6 @@ const FilterCard = ({
       ? tailwindColors.slate[400]
       : filterColors[index].active || '#FFFFFF'
 
-  console.log('color', color)
   return (
     <div
       onMouseEnter={() => onEnter?.({ index })}
