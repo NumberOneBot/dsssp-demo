@@ -1,13 +1,13 @@
 import { type GraphFilter } from 'dsssp'
 
 export const customPreset: GraphFilter[] = [
-  { freq: 100, gain: 5, q: 0.7, type: 'PEAK' },
-  { freq: 200, gain: -8, q: 0.7, type: 'PEAK' },
-  { freq: 400, gain: 8, q: 0.7, type: 'PEAK' },
+  { freq: 100, gain: 4, q: 0.7, type: 'PEAK' },
+  { freq: 200, gain: -6, q: 0.7, type: 'PEAK' },
+  { freq: 400, gain: 7, q: 0.7, type: 'PEAK' },
   { freq: 800, gain: -8, q: 0.7, type: 'PEAK' },
-  { freq: 1600, gain: 8, q: 0.7, type: 'PEAK' },
-  { freq: 3200, gain: -8, q: 0.7, type: 'PEAK' },
-  { freq: 6400, gain: 5, q: 0.7, type: 'PEAK' }
+  { freq: 1600, gain: 7, q: 0.7, type: 'PEAK' },
+  { freq: 3200, gain: -6, q: 0.7, type: 'PEAK' },
+  { freq: 6400, gain: 4, q: 0.7, type: 'PEAK' }
 ]
 
 export const brightPreset: GraphFilter[] = [

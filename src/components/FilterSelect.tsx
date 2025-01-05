@@ -2,6 +2,7 @@ import { useState } from 'react'
 import {
   FilterIcon,
   filterTypeKeys,
+  getIconSymbol,
   type FilterType,
   type GraphFilter
 } from 'dsssp'
@@ -38,14 +39,15 @@ const FilterSelect = ({
           }}
           className="bg-transparent text-transparent appearance-none w-full h-full px-1 cursor-pointer focus:outline-none focus:ring-0"
         >
-          {filterTypeKeys.map((type: string) => (
+          {filterTypeKeys.map((type: FilterType) => (
             <option
               key={type}
               value={type}
-              className="bg-zinc-950 text-center text-sm text-white "
-            >
-              {type}
-            </option>
+              className="bg-zinc-950 text-white text-sm font-[dsssp,sans-serif]"
+              dangerouslySetInnerHTML={{
+                __html: `&nbsp;${getIconSymbol(type)} ${type}&nbsp;`
+              }}
+            ></option>
           ))}
         </select>
         <div
@@ -69,19 +71,19 @@ const FilterSelect = ({
           </svg>
         </div>
         <div className="p-1 absolute -top-1 left-1/2 -translate-x-1/2 pointer-events-none">
+          <div
+            className="absolute rounded-full -inset-8"
+            style={{
+              background: `radial-gradient(circle, ${color}20 0%, ${color}08 20%, transparent 70%)`
+            }}
+          />
           <FilterIcon
             size={32}
             color={color}
             filter={filter}
             className="relative z-10"
             style={{
-              textShadow: opened ? `${color}FF 0 0 12px` : `${color}80 0 0 8px`
-            }}
-          />
-          <div
-            className="absolute rounded-full -inset-8"
-            style={{
-              background: `radial-gradient(circle, ${color}20 0%, ${color}08 20%, transparent 70%)`
+              textShadow: opened ? `${color} 0 0 12px` : `${color}80 0 0 8px`
             }}
           />
         </div>
