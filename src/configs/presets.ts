@@ -1,13 +1,13 @@
 import { type GraphFilter } from 'dsssp'
 
 export const customPreset: GraphFilter[] = [
-  { freq: 40, gain: 0, q: 0.7, type: 'HIGHPASS2' },
-  { freq: 200, gain: 2, q: 0.7, type: 'PEAK' },
-  { freq: 800, gain: -2, q: 2, type: 'PEAK' },
-  { freq: 2000, gain: 2, q: 0.7, type: 'PEAK' },
-  { freq: 4000, gain: -2, q: 0.7, type: 'PEAK' },
-  { freq: 12000, gain: 2, q: 0.7, type: 'PEAK' },
-  { freq: 16000, gain: -4, q: 0.7, type: 'HIGHSHELF2' }
+  { freq: 100, gain: 5, q: 0.7, type: 'PEAK' },
+  { freq: 200, gain: -8, q: 0.7, type: 'PEAK' },
+  { freq: 400, gain: 8, q: 0.7, type: 'PEAK' },
+  { freq: 800, gain: -8, q: 0.7, type: 'PEAK' },
+  { freq: 1600, gain: 8, q: 0.7, type: 'PEAK' },
+  { freq: 3200, gain: -8, q: 0.7, type: 'PEAK' },
+  { freq: 6400, gain: 5, q: 0.7, type: 'PEAK' }
 ]
 
 export const brightPreset: GraphFilter[] = [
@@ -50,13 +50,23 @@ export const speechPreset: GraphFilter[] = [
   { freq: 16000, gain: 0, q: 0.7, type: 'LOWPASS1' }
 ]
 
+export const vocalPreset: GraphFilter[] = [
+  { freq: 60, gain: 0, q: 0.6, type: 'BYPASS' },
+  { freq: 400, gain: 6, q: 0.7, type: 'PEAK' },
+  { freq: 1000, gain: 4, q: 0.7, type: 'PEAK' },
+  { freq: 2500, gain: 2, q: 0.7, type: 'PEAK' },
+  { freq: 6400, gain: 3, q: 0.7, type: 'PEAK' },
+  { freq: 16000, gain: -1, q: 0.7, type: 'LOWPASS1' },
+  { freq: 16000, gain: 0, q: 0.7, type: 'BYPASS' }
+]
+
 const presets = [
   { name: 'Custom', filters: customPreset },
   { name: 'Bright', filters: brightPreset },
   { name: 'Excited', filters: excitedPreset },
+  { name: 'Vocal', filters: vocalPreset },
   { name: 'Mellow', filters: mellowPreset },
   // { name: 'Relaxed', filters: [] },
-  // { name: 'Vocal', filters: [] },
   // { name: 'Treble Boost', filters: [] },
   { name: 'Speech', filters: speechPreset }
 ]
