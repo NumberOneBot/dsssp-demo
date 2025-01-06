@@ -60,15 +60,26 @@ export const vocalPreset: GraphFilter[] = [
   { freq: 16000, gain: 0, q: 0.7, type: 'BYPASS' }
 ]
 
+export const flatPreset: GraphFilter[] = [
+  { freq: 100, gain: 0, q: 0.7, type: 'PEAK' },
+  { freq: 200, gain: 0, q: 0.7, type: 'PEAK' },
+  { freq: 400, gain: 0, q: 0.7, type: 'PEAK' },
+  { freq: 800, gain: 0, q: 0.7, type: 'PEAK' },
+  { freq: 1600, gain: 0, q: 0.7, type: 'PEAK' },
+  { freq: 3200, gain: 0, q: 0.7, type: 'PEAK' },
+  { freq: 6400, gain: 0, q: 0.7, type: 'PEAK' }
+]
+
 const presets = [
-  { name: 'Custom', filters: customPreset },
+  { name: 'Demo Preset', filters: customPreset },
   { name: 'Bright', filters: brightPreset },
   { name: 'Excited', filters: excitedPreset },
   { name: 'Vocal', filters: vocalPreset },
   { name: 'Mellow', filters: mellowPreset },
   // { name: 'Relaxed', filters: [] },
   // { name: 'Treble Boost', filters: [] },
-  { name: 'Speech', filters: speechPreset }
+  { name: 'Speech', filters: speechPreset },
+  { name: 'Flat', filters: flatPreset }
 ]
 
 export default presets

@@ -31,7 +31,7 @@ const AppHeaderBar = ({
 
   return (
     <div className="flex flex-row w-full gap-2 p-2  bg-black border border-zinc-800 rounded-sm shadow-sm items-center justify-between">
-      <h1 className="px-2 text-2xl font-mono w-[160px]">DSSSP DEMO</h1>
+      <h1 className="px-2 text-2xl font-mono w-[160px]">DSSSP</h1>
       <div className="flex flex-row border rounded-sm border-zinc-800 relative">
         <div className="text-zinc-500 w-[140px] py-1 px-3 text-center">
           {presets[presetIndex].name}
