@@ -35,8 +35,11 @@ jobs:
       - name: Build project
         run: npx vite build
 
+      - name: List files in dist
+        run: ls -al ./dist
+
       - name: Upload artifact for deployment
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
         with:
           path: ./dist
 
