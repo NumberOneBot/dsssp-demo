@@ -35,6 +35,9 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Verify dist directory
+        run: ls -la ./dist
+
       - name: Upload artifact for deployment
         uses: actions/upload-pages-artifact@v1
         with:
