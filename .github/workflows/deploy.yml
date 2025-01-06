@@ -10,14 +10,8 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: 'pages'
-  cancel-in-progress: true
-
 jobs:
-  deploy:
-    environment:
-      name: github-pages
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -33,7 +27,7 @@ jobs:
         run: npm install
 
       - name: Build project
-        run: npx vite build
+        run: npm run build
 
       - name: Verify dist directory
         run: ls -la ./dist
@@ -43,5 +37,11 @@ jobs:
         with:
           path: ./dist
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
