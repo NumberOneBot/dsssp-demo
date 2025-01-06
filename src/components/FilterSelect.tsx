@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import clsx from 'clsx'
 import {
   FilterIcon,
   filterTypeKeys,
@@ -6,9 +7,7 @@ import {
   type FilterType,
   type GraphFilter
 } from 'dsssp'
-
 import 'dsssp/font'
-import clsx from 'clsx'
 
 const FilterSelect = ({
   color,
