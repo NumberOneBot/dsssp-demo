@@ -39,7 +39,7 @@ jobs:
         run: ls -al ./dist
 
       - name: Upload artifact for deployment
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: ./dist
 
