@@ -13,7 +13,7 @@ const AppHeaderBar = ({
   ) => void
 }) => {
   const buttonClasses =
-    'px-2.5 py-1 m-[-1px] text-sm font-semibold text-zinc-500 bg-black border border-zinc-800 rounded-sm hover:bg-zinc-950 hover:text-zinc-300 focus-visible:z-10 focus:outline-none focus-visible:border-sky-500 active:border-zinc-500 active:z-10'
+    "px-2.5 py-1 m-[-1px] text-sm font-semibold font-['Zapf_Dingbats'] text-zinc-500 bg-black border border-zinc-800 rounded-sm hover:bg-zinc-950 hover:text-zinc-300 focus-visible:z-10 focus:outline-none focus-visible:border-sky-500 active:border-zinc-500 active:z-10"
 
   const [presetIndex, setPresetIndex] = useState(0)
 
@@ -40,13 +40,13 @@ const AppHeaderBar = ({
           className={buttonClasses}
           onClick={handlePrevClick}
         >
-          &#11207;
+          &#11164;
         </button>
         <button
           className={buttonClasses}
           onClick={handleNextClick}
         >
-          &#11208;
+          &#11166;
         </button>
       </div>
       <div className="w-[160px] text-right font-mono text-lg text-zinc-500 px-2 cursor-pointer">
