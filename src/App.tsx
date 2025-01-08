@@ -6,7 +6,7 @@ import {
   FilterGradient,
   FilterPoint,
   type FilterChangeEvent,
-  MouseTracker,
+  PointerTracker,
   GraphFilter
 } from 'dsssp'
 
@@ -104,7 +104,7 @@ function App() {
                 onChange={handleFilterChange}
               />
             ))}
-            {!dragging && <MouseTracker />}
+            {!dragging && <PointerTracker />}
           </FrequencyResponseGraph>
           <div className={styles.glareOverlay}></div>
         </div>

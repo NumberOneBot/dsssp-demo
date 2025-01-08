@@ -40,13 +40,13 @@ const AppHeaderBar = ({
           className={buttonClasses}
           onClick={handlePrevClick}
         >
-          &#129120;
+          &#11207;
         </button>
         <button
           className={buttonClasses}
           onClick={handleNextClick}
         >
-          &#129122;
+          &#11208;
         </button>
       </div>
       <div className="w-[160px] text-right font-mono text-lg text-zinc-500 px-2 cursor-pointer">
