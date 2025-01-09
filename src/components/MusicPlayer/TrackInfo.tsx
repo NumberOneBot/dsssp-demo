@@ -1,50 +1,41 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { CoversStack } from '.'
+import { tracks } from '../../configs/tracks'
 
-interface TrackInfoProps {
-  artist: string
-  title: string
+export interface TrackInfoProps {
+  activeIndex: number
   currentTime: string
   duration: string
-  coverImages: string[]
+  onChangeTrack?: (next: number) => void
 }
 
 export const TrackInfo: React.FC<TrackInfoProps> = ({
-  artist,
-  title,
+  activeIndex,
   currentTime,
   duration,
-  coverImages
+  onChangeTrack
 }) => {
-  const [activeIndex, setActiveIndex] = useState(0)
-
-  useEffect(() => {
-    // const interval = setInterval(() => {
-    //   setActiveIndex((prevIndex) => (prevIndex + 1) % coverImages.length)
-    // }, 3000) // Change image every 3 seconds
-    // return () => clearInterval(interval)
-  }, [coverImages.length])
+  const artist = tracks[activeIndex].artist
+  const title = tracks[activeIndex].title
+  const coverImages = tracks.map((track) => track.cover)
 
   return (
-    <>
-      <div className="w-[34px] h-[34px] relative">
-        {coverImages.map((image, index) => (
-          <img
-            key={index}
-            src={image}
-            className={`absolute top-0 left-0 w-full h-full bg-zinc-800 transition-opacity duration-1000 ${
-              index === activeIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-          />
-        ))}
-      </div>
-      <div className="min-w-[72px] flex flex-col h-full items-start justify-center">
-        <div className="text-zinc-300 text-xs">{artist}</div>
-        <div className="text-zinc-500 text-xs">{title}</div>
+    <div className="flex flex-row gap-2 items-center">
+      <CoversStack
+        covers={coverImages}
+        active={activeIndex}
+        onClick={() => onChangeTrack?.((activeIndex + 1) % tracks.length)}
+      />
+      <div className="w-[86px] flex flex-col h-full overflow-hidden items-start justify-center text-xs">
+        <div className="text-zinc-300 whitespace-nowrap">{artist}</div>
+        <div className="text-zinc-600 whitespace-nowrap">{title}</div>
       </div>
       <div className="flex flex-col h-full items-end justify-center">
         <div className="text-zinc-500 text-xs">{currentTime}</div>
-        <div className="text-zinc-600 text-xs">{duration}</div>
+        <div className="text-zinc-500 text-xs">{duration}</div>
       </div>
-    </>
+    </div>
   )
 }
+
+export default TrackInfo

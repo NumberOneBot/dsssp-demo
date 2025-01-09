@@ -3,13 +3,12 @@ import { AudioController, TrackInfo, Visualizer, PlaybackButtons } from '.'
 
 import { tracks } from '../../configs/tracks'
 
-const activeTrack = 0
-
 const MusicPlayer: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [playing, setPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState('0:00')
   const [duration, setDuration] = useState('0:00')
+  const [activeTrack, setActiveTrack] = useState(0)
 
   const audioController = useRef(
     new AudioController({
@@ -45,22 +44,29 @@ const MusicPlayer: React.FC = () => {
 
   const analysers = audioController.current.getAnalyserNodes()
 
+  const handleChangeTrack = (nextTrack: number) => {
+    setActiveTrack(nextTrack)
+    setCurrentTime('0:00')
+    audioController.current.stop()
+    audioController.current.init(tracks[nextTrack].src)
+    setPlaying(false)
+  }
+
   if (loading) {
     return (
-      <div className="w-[340px] text-sm text-zinc-600 font-sans text-center">
+      <div className="w-[344px] text-sm text-zinc-600 font-sans text-center">
         Loading...
       </div>
     )
   }
 
   return (
-    <div className="w-[340px] flex flex-row gap-3 items-center">
+    <div className="w-[344px] flex flex-row gap-3 items-center">
       <TrackInfo
-        artist={tracks[activeTrack].artist}
-        title={tracks[activeTrack].title}
-        coverImages={[tracks[activeTrack].cover]}
+        activeIndex={activeTrack}
         currentTime={currentTime}
         duration={duration}
+        onChangeTrack={handleChangeTrack}
       />
       <PlaybackButtons
         playing={playing}
