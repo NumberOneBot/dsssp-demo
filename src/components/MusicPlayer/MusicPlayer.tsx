@@ -9,7 +9,7 @@ import {
 
 import { tracks } from '../../configs/tracks'
 
-const activeTrack = 2
+const activeTrack = 0
 
 const MusicPlayer: React.FC = () => {
   const [loading, setLoading] = useState(true)
@@ -97,11 +97,13 @@ const MusicPlayer: React.FC = () => {
           analyser={analyserLeftRef.current}
           width={96}
           height={6}
+          maxFPS={30}
         />
         <Visualizer
           analyser={analyserRightRef.current}
           width={96}
           height={6}
+          maxFPS={30}
         />
       </div>
     </div>

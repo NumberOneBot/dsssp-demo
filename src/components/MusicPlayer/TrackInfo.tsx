@@ -37,7 +37,7 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
           />
         ))}
       </div>
-      <div className="min-w-[86px] flex flex-col h-full items-start justify-center">
+      <div className="min-w-[72px] flex flex-col h-full items-start justify-center">
         <div className="text-zinc-300 text-xs">{artist}</div>
         <div className="text-zinc-500 text-xs">{title}</div>
       </div>
