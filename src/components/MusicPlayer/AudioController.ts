@@ -1,230 +1,198 @@
-import { MutableRefObject } from 'react'
-
 export interface AudioControllerProps {
-  audioContextRef: MutableRefObject<AudioContext | null>
-  sourceNodeRef: MutableRefObject<AudioBufferSourceNode | null>
-  audioBufferRef: MutableRefObject<AudioBuffer | null>
-  startTimeRef: MutableRefObject<number | null>
-  pausedAtRef: MutableRefObject<number | null>
-  requestAnimationFrameIdRef: MutableRefObject<number | null>
-  analyserLeftRef: MutableRefObject<AnalyserNode | null>
-  analyserRightRef: MutableRefObject<AnalyserNode | null>
-  onTrackEnd?: () => void
+  onTimeUpdate: (time: string) => void
+  onDurationChange: (duration: string) => void
+  onTrackEnd: () => void
+  onLoadingChange: (isLoading: boolean) => void
 }
 
 export class AudioController {
+  private audioContext: AudioContext | null = null
+  private sourceNode: AudioBufferSourceNode | null = null
+  private audioBuffer: AudioBuffer | null = null
+  private startTime: number | null = null
+  private pausedAt: number = 0
+  private requestAnimationFrameId: number | null = null
+  private analyserLeft: AnalyserNode | null = null
+  private analyserRight: AnalyserNode | null = null
+
   constructor(private props: AudioControllerProps) {}
 
-  async init(
-    url: string,
-    onDurationChange: (duration: number) => void
-  ): Promise<void> {
+  async init(url: string): Promise<void> {
     try {
       const AudioContextConstructor =
         window.AudioContext || (window as any).webkitAudioContext
-      const audioContext = new AudioContextConstructor()
-      this.props.audioContextRef.current = audioContext
+      this.audioContext = new AudioContextConstructor()
 
-      const analyserLeft = audioContext.createAnalyser()
-      const analyserRight = audioContext.createAnalyser()
-      analyserLeft.fftSize = 256
-      analyserRight.fftSize = 256
-      this.props.analyserLeftRef.current = analyserLeft
-      this.props.analyserRightRef.current = analyserRight
+      this.analyserLeft = this.audioContext.createAnalyser()
+      this.analyserRight = this.audioContext.createAnalyser()
+      this.analyserLeft.fftSize = 256
+      this.analyserRight.fftSize = 256
 
       const response = await fetch(url)
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       const arrayBuffer = await response.arrayBuffer()
-      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
-      this.props.audioBufferRef.current = audioBuffer
+      this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer)
 
-      onDurationChange(audioBuffer.duration)
+      this.props.onDurationChange(this.formatTime(this.audioBuffer.duration))
+      this.props.onLoadingChange(false)
     } catch (error) {
       console.error('Error loading audio:', error)
       throw error
     }
   }
 
-  updatePosition(
-    playing: boolean,
-    onTimeUpdate: (currentTime: number) => void
-  ): void {
-    const audioContext = this.props.audioContextRef.current
-    const startTime = this.props.startTimeRef.current
-    const pausedAt = this.props.pausedAtRef.current
-    const audioBuffer = this.props.audioBufferRef.current
+  private formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60)
+    const remainingSeconds = Math.floor(seconds % 60)
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+  }
 
+  updatePosition(playing: boolean): void {
     if (
-      !audioContext ||
+      !this.audioContext ||
       !playing ||
-      startTime == null ||
-      pausedAt == null ||
-      !audioBuffer
+      this.startTime == null ||
+      !this.audioBuffer
     ) {
       return
     }
 
-    const elapsed = audioContext.currentTime - startTime
-    const currentPosition = pausedAt + elapsed
+    const elapsed = this.audioContext.currentTime - this.startTime
+    const currentPosition = this.pausedAt + elapsed
 
-    if (currentPosition >= audioBuffer.duration) {
+    if (currentPosition >= this.audioBuffer.duration) {
       this.stop()
-      onTimeUpdate(audioBuffer.duration)
-      if (this.props.onTrackEnd) {
-        this.props.onTrackEnd()
-      }
+      this.props.onTimeUpdate(this.formatTime(this.audioBuffer.duration))
+      this.props.onTrackEnd()
       return
     }
 
-    onTimeUpdate(currentPosition)
+    this.props.onTimeUpdate(this.formatTime(currentPosition))
 
-    if (this.props.requestAnimationFrameIdRef.current != null) {
-      cancelAnimationFrame(this.props.requestAnimationFrameIdRef.current)
+    if (this.requestAnimationFrameId != null) {
+      cancelAnimationFrame(this.requestAnimationFrameId)
     }
-    this.props.requestAnimationFrameIdRef.current = requestAnimationFrame(() =>
-      this.updatePosition(playing, onTimeUpdate)
+    this.requestAnimationFrameId = requestAnimationFrame(() =>
+      this.updatePosition(playing)
     )
   }
 
   play(): void {
-    const audioContext = this.props.audioContextRef.current
-    const audioBuffer = this.props.audioBufferRef.current
-    const pausedAt = this.props.pausedAtRef.current
-
     if (
-      !audioContext ||
-      !audioBuffer ||
-      pausedAt == null ||
-      pausedAt >= audioBuffer.duration
+      !this.audioContext ||
+      !this.audioBuffer ||
+      this.pausedAt >= this.audioBuffer.duration
     ) {
       console.warn('Cannot play: missing resources or end of track')
       return
     }
 
-    if (audioContext.state === 'suspended') {
-      audioContext.resume().catch((error) => {
+    if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume().catch((error) => {
         console.error('Error resuming AudioContext:', error)
       })
     }
 
-    const sourceNode = audioContext.createBufferSource()
-    sourceNode.buffer = audioBuffer
+    const sourceNode = this.audioContext.createBufferSource()
+    sourceNode.buffer = this.audioBuffer
 
-    const splitter = audioContext.createChannelSplitter(2)
+    const splitter = this.audioContext.createChannelSplitter(2)
     sourceNode.connect(splitter)
 
-    if (
-      this.props.analyserLeftRef.current &&
-      this.props.analyserRightRef.current
-    ) {
-      splitter.connect(this.props.analyserLeftRef.current, 0)
-      splitter.connect(this.props.analyserRightRef.current, 1)
+    if (this.analyserLeft && this.analyserRight) {
+      splitter.connect(this.analyserLeft, 0)
+      splitter.connect(this.analyserRight, 1)
     } else {
       console.warn('Analyser nodes are not initialized.')
     }
-    splitter.connect(audioContext.destination)
+    splitter.connect(this.audioContext.destination)
 
     try {
-      sourceNode.start(0, pausedAt)
+      sourceNode.start(0, this.pausedAt)
     } catch (error) {
       console.error('Error starting source node:', error)
       return
     }
 
-    this.props.startTimeRef.current = audioContext.currentTime
-
-    this.props.sourceNodeRef.current = sourceNode
-
-    sourceNode.onended = () => {
-      // ...existing onended logic (optional)...
-    }
+    this.startTime = this.audioContext.currentTime
+    this.sourceNode = sourceNode
   }
 
   pause(): void {
-    const audioContext = this.props.audioContextRef.current
-    const sourceNode = this.props.sourceNodeRef.current
-    const startTime = this.props.startTimeRef.current
-    const pausedAt = this.props.pausedAtRef.current
-
-    if (!audioContext || !sourceNode || startTime == null || pausedAt == null) {
+    if (!this.audioContext || !this.sourceNode || this.startTime == null) {
       console.warn('Cannot pause: missing resources')
       return
     }
 
-    const elapsed = audioContext.currentTime - startTime
-    this.props.pausedAtRef.current = pausedAt + elapsed
+    const elapsed = this.audioContext.currentTime - this.startTime
+    this.pausedAt = this.pausedAt + elapsed
 
     try {
-      sourceNode.stop()
-      sourceNode.disconnect()
-      this.props.sourceNodeRef.current = null
+      this.sourceNode.stop()
+      this.sourceNode.disconnect()
+      this.sourceNode = null
     } catch (error) {
       console.warn('Error while stopping source node:', error)
     }
 
-    if (this.props.requestAnimationFrameIdRef.current != null) {
-      cancelAnimationFrame(this.props.requestAnimationFrameIdRef.current)
-      this.props.requestAnimationFrameIdRef.current = null
+    if (this.requestAnimationFrameId != null) {
+      cancelAnimationFrame(this.requestAnimationFrameId)
+      this.requestAnimationFrameId = null
     }
   }
-  stop(): void {
-    const audioContext = this.props.audioContextRef.current
-    const sourceNode = this.props.sourceNodeRef.current
 
-    if (!audioContext) {
+  stop(): void {
+    if (!this.audioContext) {
       console.warn('Cannot stop: AudioContext is missing')
       return
     }
 
-    if (sourceNode) {
+    if (this.sourceNode) {
       try {
-        sourceNode.stop()
-        sourceNode.disconnect()
-        this.props.sourceNodeRef.current = null
+        this.sourceNode.stop()
+        this.sourceNode.disconnect()
+        this.sourceNode = null
       } catch (error) {
         console.warn('Error stopping source node:', error)
       }
     }
 
-    // Reset position to beginning
-    this.props.pausedAtRef.current = 0
-    this.props.startTimeRef.current = null
+    this.pausedAt = 0
+    this.startTime = null
 
-    // Cancel any ongoing animation frame
-    if (this.props.requestAnimationFrameIdRef.current != null) {
-      cancelAnimationFrame(this.props.requestAnimationFrameIdRef.current)
-      this.props.requestAnimationFrameIdRef.current = null
+    if (this.requestAnimationFrameId != null) {
+      cancelAnimationFrame(this.requestAnimationFrameId)
+      this.requestAnimationFrameId = null
     }
   }
 
   cleanup(): void {
-    const sourceNode = this.props.sourceNodeRef.current
-    const audioContext = this.props.audioContextRef.current
-    const requestAnimationFrameId =
-      this.props.requestAnimationFrameIdRef.current
-
-    if (sourceNode) {
+    if (this.sourceNode) {
       try {
-        sourceNode.stop()
-        sourceNode.disconnect()
+        this.sourceNode.stop()
+        this.sourceNode.disconnect()
       } catch (error) {
         console.warn('Error stopping source node:', error)
       }
-      this.props.sourceNodeRef.current = null
     }
 
-    if (requestAnimationFrameId != null) {
-      cancelAnimationFrame(requestAnimationFrameId)
-      this.props.requestAnimationFrameIdRef.current = null
+    if (this.requestAnimationFrameId != null) {
+      cancelAnimationFrame(this.requestAnimationFrameId)
     }
 
-    if (audioContext) {
-      audioContext.close().catch((error) => {
+    if (this.audioContext) {
+      this.audioContext.close().catch((error) => {
         console.warn('Error closing audio context:', error)
       })
-      this.props.audioContextRef.current = null
+    }
+  }
+
+  getAnalyserNodes() {
+    return {
+      left: this.analyserLeft,
+      right: this.analyserRight
     }
   }
 }
