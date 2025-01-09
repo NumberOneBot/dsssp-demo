@@ -47,7 +47,7 @@ const MusicPlayer: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="w-[340px] text-sm text-zinc-600 font-sans text-center w-full">
+      <div className="w-[340px] text-sm text-zinc-600 font-sans text-center">
         Loading...
       </div>
     )
