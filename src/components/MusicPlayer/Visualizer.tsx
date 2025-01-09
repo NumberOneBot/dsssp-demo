@@ -78,7 +78,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
           ctx.fillStyle = getSegmentColor(i, totalSegments, lastActive)
         } else {
           // Otherwise make the segment inactive (for example, dark green / gray)
-          ctx.fillStyle = '#2f2f2f'
+          ctx.fillStyle = '#222222'
         }
         const x = i * segmentWidth
         ctx.fillRect(x, 0, segmentWidth - 1, height) // -1 for a small gap

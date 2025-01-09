@@ -28,6 +28,12 @@ const MusicPlayer: React.FC = () => {
   const analyserLeftRef = useRef<AnalyserNode | null>(null) // Ref for left channel
   const analyserRightRef = useRef<AnalyserNode | null>(null) // Ref for right channel
 
+  const handleStop = () => {
+    setPlaying(false)
+    setCurrentTime('0:00')
+    audioController.stop()
+  }
+
   const audioController = new AudioController({
     audioContextRef,
     sourceNodeRef,
@@ -36,7 +42,8 @@ const MusicPlayer: React.FC = () => {
     pausedAtRef,
     requestAnimationFrameIdRef,
     analyserLeftRef,
-    analyserRightRef
+    analyserRightRef,
+    onTrackEnd: handleStop // Добавляем обработчик
   })
 
   useEffect(() => {
@@ -61,12 +68,6 @@ const MusicPlayer: React.FC = () => {
       }
     }
   }, [playing])
-
-  const handleStop = () => {
-    setPlaying(false)
-    setCurrentTime('0:00')
-    audioController.stop()
-  }
 
   if (loading) {
     return (

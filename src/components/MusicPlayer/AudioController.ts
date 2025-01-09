@@ -9,6 +9,7 @@ export interface AudioControllerProps {
   requestAnimationFrameIdRef: MutableRefObject<number | null>
   analyserLeftRef: MutableRefObject<AnalyserNode | null>
   analyserRightRef: MutableRefObject<AnalyserNode | null>
+  onTrackEnd?: () => void
 }
 
 export class AudioController {
@@ -71,6 +72,9 @@ export class AudioController {
     if (currentPosition >= audioBuffer.duration) {
       this.stop()
       onTimeUpdate(audioBuffer.duration)
+      if (this.props.onTrackEnd) {
+        this.props.onTrackEnd()
+      }
       return
     }
 
@@ -123,14 +127,12 @@ export class AudioController {
     splitter.connect(audioContext.destination)
 
     try {
-      // Запускаем с учетом сохраненной позиции pausedAt
       sourceNode.start(0, pausedAt)
     } catch (error) {
       console.error('Error starting source node:', error)
       return
     }
 
-    // Устанавливаем startTime, равным текущему времени, для точного расчета elapsed
     this.props.startTimeRef.current = audioContext.currentTime
 
     this.props.sourceNodeRef.current = sourceNode
