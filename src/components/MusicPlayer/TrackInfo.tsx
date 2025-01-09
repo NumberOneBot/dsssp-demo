@@ -23,11 +23,6 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
   const title = tracks[activeIndex].title
   const coverImages = tracks.map((track) => track.cover)
 
-  if (loading) {
-    currentTime = '0:00'
-    duration = '0:00'
-  }
-
   return (
     <div className="flex flex-row gap-2 items-center">
       <CoversStack
@@ -41,7 +36,7 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
       </div>
       <div
         className={clsx('flex flex-col h-full items-end justify-center', {
-          'opacity-50 pointer-events-none': loading
+          'opacity-0 pointer-events-none': loading
         })}
       >
         <div className="text-zinc-600 text-xs">{currentTime}</div>

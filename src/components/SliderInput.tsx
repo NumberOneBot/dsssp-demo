@@ -99,6 +99,7 @@ const SliderInput = ({
       <div className="pt-1">
         <FilterInput
           value={value}
+          precision={2}
           onChange={onChange}
         />
       </div>

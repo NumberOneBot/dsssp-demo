@@ -48,7 +48,7 @@ const FilterInput = ({
   }, [value])
 
   return (
-    <div className="flex flex-col shadow-md">
+    <div className="flex flex-col">
       {label && (
         <label className="mb-1 text-sm font-semibold text-zinc-500 drop-shadow-lg">
           {label}
@@ -63,7 +63,7 @@ const FilterInput = ({
           onKeyUp={handleKeyUp}
           onBlur={handleBlur}
           className={clsx(
-            'appearance-none block w-full text-center bg-zinc-950 text-white border border-zinc-700 rounded-sm py-0.5 focus:outline-none focus:ring-sky-500 focus:border-sky-500',
+            'appearance-none block w-full text-center shadow-md bg-zinc-950 text-white border border-zinc-700 rounded-sm py-0.5 focus:outline-none focus:ring-sky-500 focus:border-sky-500',
             { 'pl-10': prefix },
             { 'pr-8': suffix }
           )}

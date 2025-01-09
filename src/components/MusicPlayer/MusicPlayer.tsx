@@ -20,9 +20,9 @@ const MusicPlayer: React.FC = () => {
   useEffect(() => {
     audioController.current = new AudioController({
       onTimeUpdate: setCurrentTime,
+      onTrackEnd: () => setPlaying(false),
       onDurationChange: setDuration,
       onLoadingChange: setLoading,
-      onTrackEnd: () => setPlaying(false),
       onAnalyserReady: setAnalysers
     })
 
