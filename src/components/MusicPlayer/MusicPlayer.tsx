@@ -2,13 +2,14 @@ import { useEffect, useState, useRef } from 'react'
 import { AudioController, TrackInfo, Visualizer, PlaybackButtons } from '.'
 
 import { tracks } from '../../configs/tracks'
+import clsx from 'clsx'
 
 const MusicPlayer: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [playing, setPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState('0:00')
   const [duration, setDuration] = useState('0:00')
-  const [activeTrack, setActiveTrack] = useState(0)
+  const [activeTrack, setActiveTrack] = useState(2)
 
   const audioController = useRef(
     new AudioController({
@@ -52,27 +53,23 @@ const MusicPlayer: React.FC = () => {
     setPlaying(false)
   }
 
-  if (loading) {
-    return (
-      <div className="w-[344px] text-sm text-zinc-600 font-sans text-center">
-        Loading...
-      </div>
-    )
-  }
-
   return (
-    <div className="w-[344px] flex flex-row gap-3 items-center">
+    <div className="w-[350px] flex flex-row gap-3 items-center justify-end">
       <TrackInfo
         activeIndex={activeTrack}
         currentTime={currentTime}
         duration={duration}
+        loading={loading}
         onChangeTrack={handleChangeTrack}
       />
-      <PlaybackButtons
-        playing={playing}
-        onStop={handleStop}
-        onToggle={() => setPlaying(!playing)}
-      />
+
+      <div className={clsx({ 'pointer-events-none opacity-50': loading })}>
+        <PlaybackButtons
+          playing={playing}
+          onStop={handleStop}
+          onToggle={() => setPlaying(!playing)}
+        />
+      </div>
 
       <div className="flex flex-col gap-2">
         <Visualizer
