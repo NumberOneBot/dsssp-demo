@@ -25,10 +25,10 @@ export class AudioController {
 
       this.analyserLeft = this.audioContext.createAnalyser()
       this.analyserRight = this.audioContext.createAnalyser()
-      this.analyserLeft.fftSize = 256
-      this.analyserRight.fftSize = 256
+      this.analyserLeft.fftSize = 32
+      this.analyserRight.fftSize = 32
 
-      const response = await fetch(url)
+      const response = await fetch(url, { mode: 'cors' })
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
