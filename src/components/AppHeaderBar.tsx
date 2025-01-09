@@ -36,36 +36,27 @@ const AppHeaderBar = ({
   // }
 
   return (
-    <div className="flex flex-row w-full gap-2 p-2  bg-black border border-zinc-800 rounded-sm shadow-sm items-center justify-between">
-      <h1 className="px-2 text-2xl font-mono w-[200px]">DSSSP</h1>
-      <div className="flex flex-row gap-3">
-        <div className="flex flex-row border rounded-sm border-zinc-800 relative">
-          <div className="text-zinc-500 w-[140px] py-1 px-3 text-center">
-            {presets[presetIndex].name}
-          </div>
-          <button
-            className={buttonClasses}
-            onClick={handlePrevClick}
-          >
-            &#129120;
-          </button>
-          <button
-            className={buttonClasses}
-            onClick={handleNextClick}
-          >
-            &#129122;
-          </button>
+    <div className="flex flex-row w-full gap-2 py-2 px-3 bg-black border border-zinc-800 rounded-sm shadow-sm items-center justify-between">
+      <h1 className="px-1 text-2xl font-mono">DSSSP</h1>
+
+      <MusicPlayer />
+
+      <div className="flex flex-row border rounded-sm border-zinc-800 relative">
+        <div className="text-zinc-500 w-[140px] py-1 px-3 text-center">
+          {presets[presetIndex].name}
         </div>
-        {/* <button
-          className={clsx(buttonClasses, 'm-0')}
-          onClick={handleReset}
+        <button
+          className={buttonClasses}
+          onClick={handlePrevClick}
         >
-          Reset
-        </button> */}
-      </div>
-      <div className="w-[200px] text-right flex justify-end pr-1">
-        <MusicPlayer />
-        {/* &#9654; &#x23F8; &#x23EE; &#x23ED; */}
+          &#129120;
+        </button>
+        <button
+          className={buttonClasses}
+          onClick={handleNextClick}
+        >
+          &#129122;
+        </button>
       </div>
     </div>
   )
