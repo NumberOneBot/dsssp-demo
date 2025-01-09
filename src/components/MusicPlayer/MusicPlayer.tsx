@@ -84,7 +84,11 @@ const MusicPlayer: React.FC = () => {
         title="Cool My Bass"
         currentTime={currentTime}
         duration={duration}
-        coverImage={demoTrackCoverImage}
+        coverImages={[
+          demoTrackCoverImage,
+          demoTrackCoverImage,
+          demoTrackCoverImage
+        ]}
       />
       <PlaybackButtons
         playing={playing}
