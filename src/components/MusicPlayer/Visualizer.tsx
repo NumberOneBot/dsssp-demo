@@ -12,6 +12,8 @@ export const Visualizer: React.FC<VisualizerProps> = ({
   height = 20
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const lastFrameTimeRef = useRef<number>(0)
+  const frameInterval = 1000 / 30 // 30 FPS
 
   useEffect(() => {
     if (!analyser) return
@@ -20,7 +22,6 @@ export const Visualizer: React.FC<VisualizerProps> = ({
     const ctx = canvas?.getContext('2d')
     if (!ctx) return
 
-    // You can use a minimum fftSize of 32
     analyser.fftSize = 32
     const bufferLength = analyser.frequencyBinCount
     const dataArray = new Uint8Array(bufferLength)
@@ -28,65 +29,65 @@ export const Visualizer: React.FC<VisualizerProps> = ({
     const totalSegments = 16
     const segmentWidth = width / totalSegments
 
-    // Segment color determining function (customizable)
     const getSegmentColor = (
       index: number,
       total: number,
       lastActive: boolean
     ) => {
-      // Start changing color only from the last third
-      const colorChangeStartIndex = (1 * total) / 3 // the first 2/3 remain green
-      const startHue = 100 // warm green
+      const colorChangeStartIndex = (2 * total) / 3 // Start from last third
+      const startHue = 100 // Green
       let hue: number
 
       if (index < colorChangeStartIndex) {
-        // Keep it green until colorChangeStartIndex
         hue = startHue
       } else {
-        // After colorChangeStartIndex, gradually transition to red
         const fraction =
           (index - colorChangeStartIndex) / (total - colorChangeStartIndex)
-        hue = startHue - fraction * 120
+        hue = startHue - fraction * 120 // Transition to red
       }
 
-      // Keep the lightness parameter as in your logic
-      const lightness = lastActive ? 50 : 30
+      const lightness = lastActive ? 50 : 25
       return `hsl(${hue}, 100%, ${lightness}%)`
     }
 
-    const draw = () => {
+    const draw = (timestamp: number) => {
+      if (timestamp - lastFrameTimeRef.current < frameInterval) {
+        requestAnimationFrame(draw)
+        return
+      }
+      lastFrameTimeRef.current = timestamp
+
       analyser.getByteFrequencyData(dataArray)
-      // Clear the canvas
       ctx.fillStyle = 'black'
       ctx.fillRect(0, 0, width, height)
 
-      // Calculate average amplitude
       let sum = 0
       for (let i = 0; i < bufferLength; i++) {
         sum += dataArray[i]
       }
       const avgAmplitude = sum / bufferLength
-      const ratio = avgAmplitude / 255 // 0..1
-      // How many segments should be "activated"
+      const ratio = avgAmplitude / 255
       const activeSegments = Math.floor(ratio * totalSegments)
 
-      // Draw each segment if it is "active"
       for (let i = 0; i < totalSegments; i++) {
-        // If the current volume covers this segment, fill it
         if (i < activeSegments) {
           const lastActive = i === activeSegments - 1
           ctx.fillStyle = getSegmentColor(i, totalSegments, lastActive)
         } else {
-          // Otherwise make the segment inactive (for example, dark green / gray)
           ctx.fillStyle = '#222222'
         }
         const x = i * segmentWidth
-        ctx.fillRect(x, 0, segmentWidth - 1, height) // -1 for a small gap
+        ctx.fillRect(x, 0, segmentWidth - 1, height)
       }
 
       requestAnimationFrame(draw)
     }
-    draw()
+
+    requestAnimationFrame(draw)
+
+    return () => {
+      // Cleanup if necessary
+    }
   }, [analyser, width, height])
 
   return (

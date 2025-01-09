@@ -7,11 +7,9 @@ import {
   PlaybackButtons
 } from '.'
 
-const demoTrackUrl =
-  './assets/BalloonPlanet_-_Cool_My_Bass_-_EX-000386_-_Master_-_114_Bpm_-_021123_-_BOV_-_EXT_-_2444.aac'
+import { tracks } from '../../configs/tracks'
 
-const demoTrackCoverImage =
-  './assets/914278_ArtWork_CoolMyBass_BalloonPlanet.png_-_A_-_500X500.jpg'
+const activeTrack = 2
 
 const MusicPlayer: React.FC = () => {
   const [loading, setLoading] = useState(true)
@@ -48,7 +46,9 @@ const MusicPlayer: React.FC = () => {
 
   useEffect(() => {
     audioController
-      .init(demoTrackUrl, (duration) => setDuration(formatTime(duration)))
+      .init(tracks[activeTrack].src, (duration) =>
+        setDuration(formatTime(duration))
+      )
       .then(() => setLoading(false))
       .catch((error) => console.error('Failed to initialize audio:', error))
 
@@ -80,15 +80,11 @@ const MusicPlayer: React.FC = () => {
   return (
     <div className="flex flex-row gap-3 items-center">
       <TrackInfo
-        artist="BalloonPlanet"
-        title="Cool My Bass"
+        artist={tracks[activeTrack].artist}
+        title={tracks[activeTrack].title}
+        coverImages={[tracks[activeTrack].cover]}
         currentTime={currentTime}
         duration={duration}
-        coverImages={[
-          demoTrackCoverImage,
-          demoTrackCoverImage,
-          demoTrackCoverImage
-        ]}
       />
       <PlaybackButtons
         playing={playing}

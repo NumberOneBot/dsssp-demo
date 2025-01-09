@@ -40,7 +40,7 @@ const AppHeaderBar = ({
       <h1 className="px-1 text-2xl font-mono">DSSSP</h1>
 
       <div className="flex flex-row border rounded-sm border-zinc-800 relative">
-        <div className="text-zinc-500 w-[140px] py-1 px-3 text-center">
+        <div className="text-zinc-500 w-[160px] py-1 px-3 text-center">
           {presets[presetIndex].name}
         </div>
         <button

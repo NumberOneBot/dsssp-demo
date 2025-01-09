@@ -14,7 +14,7 @@ export const brightPreset: GraphFilter[] = [
   { freq: 60, gain: -1, q: 1, type: 'LOWSHELF2' },
   { freq: 400, gain: 0, q: 0.7, type: 'BYPASS' },
   { freq: 1000, gain: 4, q: 1.2, type: 'PEAK' },
-  { freq: 2500, gain: 6, q: 1.2, type: 'PEAK' },
+  { freq: 2500, gain: 5, q: 1.2, type: 'PEAK' },
   { freq: 6400, gain: 6, q: 1.2, type: 'PEAK' },
   { freq: 12000, gain: 10, q: 0.8, type: 'HIGHSHELF2' },
   { freq: 16000, gain: 0, q: 1, type: 'BYPASS' }
@@ -71,7 +71,7 @@ export const flatPreset: GraphFilter[] = [
 ]
 
 const presets = [
-  { name: 'Custom', filters: customPreset },
+  { name: 'Custom Preset', filters: customPreset },
   { name: 'Bright', filters: brightPreset },
   { name: 'Excited', filters: excitedPreset },
   { name: 'Vocal', filters: vocalPreset },
