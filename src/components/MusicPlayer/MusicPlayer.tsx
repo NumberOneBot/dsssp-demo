@@ -47,14 +47,14 @@ const MusicPlayer: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="text-sm text-zinc-600 font-sans text-center w-full">
+      <div className="w-[340px] text-sm text-zinc-600 font-sans text-center w-full">
         Loading...
       </div>
     )
   }
 
   return (
-    <div className="flex flex-row gap-3 items-center">
+    <div className="w-[340px] flex flex-row gap-3 items-center">
       <TrackInfo
         artist={tracks[activeTrack].artist}
         title={tracks[activeTrack].title}
