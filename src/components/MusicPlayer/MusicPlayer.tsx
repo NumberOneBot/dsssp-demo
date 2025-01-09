@@ -1,5 +1,11 @@
 import { useEffect, useState, useRef } from 'react'
-import { AudioController, PlayButton, TrackInfo, formatTime } from '.'
+import {
+  AudioController,
+  PlayButton,
+  TrackInfo,
+  Visualizer,
+  formatTime
+} from '.'
 
 const demoTrackUrl =
   './assets/BalloonPlanet_-_Cool_My_Bass_-_EX-000386_-_Master_-_114_Bpm_-_021123_-_BOV_-_EXT_-_2444.aac'
@@ -19,6 +25,8 @@ const MusicPlayer: React.FC = () => {
   const startTimeRef = useRef<number>(0)
   const pausedAtRef = useRef<number>(0)
   const requestAnimationFrameIdRef = useRef<number | null>(null)
+  const analyserLeftRef = useRef<AnalyserNode | null>(null) // Ref for left channel
+  const analyserRightRef = useRef<AnalyserNode | null>(null) // Ref for right channel
 
   const audioController = new AudioController({
     audioContextRef,
@@ -26,7 +34,9 @@ const MusicPlayer: React.FC = () => {
     audioBufferRef,
     startTimeRef,
     pausedAtRef,
-    requestAnimationFrameIdRef
+    requestAnimationFrameIdRef,
+    analyserLeftRef,
+    analyserRightRef
   })
 
   useEffect(() => {
@@ -61,7 +71,7 @@ const MusicPlayer: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row gap-3">
+    <div className="flex flex-row gap-3 items-center">
       <TrackInfo
         artist="BalloonPlanet"
         title="Cool My Bass"
@@ -73,6 +83,18 @@ const MusicPlayer: React.FC = () => {
         playing={playing}
         onClick={() => setPlaying(!playing)}
       />
+      <div className="flex flex-col gap-1">
+        <Visualizer
+          analyser={analyserLeftRef.current}
+          width={128}
+          height={14}
+        />
+        <Visualizer
+          analyser={analyserRightRef.current}
+          width={128}
+          height={14}
+        />
+      </div>
     </div>
   )
 }
