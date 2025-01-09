@@ -1,8 +1,8 @@
 import React from 'react'
+import clsx from 'clsx'
+
 import { CoversStack } from '.'
 import { tracks } from '../../configs/tracks'
-import { current } from 'tailwindcss/colors'
-import clsx from 'clsx'
 
 export interface TrackInfoProps {
   activeIndex: number
@@ -44,8 +44,8 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
           'opacity-50 pointer-events-none': loading
         })}
       >
-        <div className="text-zinc-500 text-xs">{currentTime}</div>
-        <div className="text-zinc-500 text-xs">{duration}</div>
+        <div className="text-zinc-600 text-xs">{currentTime}</div>
+        <div className="text-zinc-600 text-xs">{duration}</div>
       </div>
     </div>
   )

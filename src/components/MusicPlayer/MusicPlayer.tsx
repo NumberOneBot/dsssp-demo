@@ -1,57 +1,69 @@
-import { useEffect, useState, useRef } from 'react'
-import { AudioController, TrackInfo, Visualizer, PlaybackButtons } from '.'
-
-import { tracks } from '../../configs/tracks'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import clsx from 'clsx'
+
+import { AudioController, TrackInfo, Visualizer, PlaybackButtons } from '.'
+import { tracks } from '../../configs/tracks'
 
 const MusicPlayer: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [playing, setPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState('0:00')
   const [duration, setDuration] = useState('0:00')
-  const [activeTrack, setActiveTrack] = useState(2)
+  const [activeTrack, setActiveTrack] = useState(0)
+  const [analysers, setAnalysers] = useState<{
+    left: AnalyserNode
+    right: AnalyserNode
+  } | null>(null)
 
-  const audioController = useRef(
-    new AudioController({
+  const audioController = useRef<AudioController | null>(null)
+
+  useEffect(() => {
+    audioController.current = new AudioController({
       onTimeUpdate: setCurrentTime,
       onDurationChange: setDuration,
       onLoadingChange: setLoading,
-      onTrackEnd: () => setPlaying(false)
+      onTrackEnd: () => setPlaying(false),
+      onAnalyserReady: setAnalysers
     })
-  )
+
+    audioController.current.init(tracks[activeTrack].src).catch((error) => {
+      console.error('Failed to initialize audio:', error)
+    })
+
+    return () => {
+      audioController.current?.cleanup()
+    }
+  }, [])
 
   const handleStop = () => {
-    setPlaying(false)
+    audioController.current?.stop()
     setCurrentTime('0:00')
-    audioController.current.stop()
+    setPlaying(false)
   }
 
   useEffect(() => {
-    audioController.current
-      .init(tracks[activeTrack].src)
-      .catch((error) => console.error('Failed to initialize audio:', error))
-
-    return () => audioController.current.cleanup()
-  }, [])
+    if (audioController.current) {
+      audioController.current.init(tracks[activeTrack].src).catch((error) => {
+        console.error('Failed to initialize audio:', error)
+      })
+    }
+  }, [activeTrack])
 
   useEffect(() => {
     if (playing) {
-      audioController.current.play()
-      audioController.current.updatePosition(playing)
+      audioController.current?.play()
+      audioController.current?.updatePosition(playing)
     } else {
-      audioController.current.pause()
+      audioController.current?.pause()
     }
   }, [playing])
 
-  const analysers = audioController.current.getAnalyserNodes()
-
-  const handleChangeTrack = (nextTrack: number) => {
+  const handleChangeTrack = useCallback((nextTrack: number) => {
+    audioController.current?.stop()
     setActiveTrack(nextTrack)
     setCurrentTime('0:00')
-    audioController.current.stop()
-    audioController.current.init(tracks[nextTrack].src)
     setPlaying(false)
-  }
+  }, [])
 
   return (
     <div className="w-[350px] flex flex-row gap-3 items-center justify-end">
@@ -71,19 +83,23 @@ const MusicPlayer: React.FC = () => {
         />
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Visualizer
-          analyser={analysers.left}
-          width={96}
-          height={6}
-          maxFPS={30}
-        />
-        <Visualizer
-          analyser={analysers.right}
-          width={96}
-          height={6}
-          maxFPS={30}
-        />
+      <div className="flex flex-col gap-2 w-[96px]">
+        {analysers && (
+          <>
+            <Visualizer
+              analyser={analysers.left}
+              width={96}
+              height={6}
+              maxFPS={30}
+            />
+            <Visualizer
+              analyser={analysers.right}
+              width={96}
+              height={6}
+              maxFPS={30}
+            />
+          </>
+        )}
       </div>
     </div>
   )
