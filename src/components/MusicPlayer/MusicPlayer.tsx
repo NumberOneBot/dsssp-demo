@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from 'react'
 import {
   AudioController,
-  PlayButton,
   TrackInfo,
   Visualizer,
-  formatTime
+  formatTime,
+  PlaybackButtons
 } from '.'
 
 const demoTrackUrl =
@@ -62,6 +62,12 @@ const MusicPlayer: React.FC = () => {
     }
   }, [playing])
 
+  const handleStop = () => {
+    setPlaying(false)
+    setCurrentTime('0:00')
+    audioController.stop()
+  }
+
   if (loading) {
     return (
       <div className="text-sm text-zinc-600 font-sans text-center w-full">
@@ -79,20 +85,22 @@ const MusicPlayer: React.FC = () => {
         duration={duration}
         coverImage={demoTrackCoverImage}
       />
-      <PlayButton
+      <PlaybackButtons
         playing={playing}
-        onClick={() => setPlaying(!playing)}
+        onStop={handleStop}
+        onToggle={() => setPlaying(!playing)}
       />
-      <div className="flex flex-col gap-1">
+
+      <div className="flex flex-col gap-2">
         <Visualizer
           analyser={analyserLeftRef.current}
-          width={128}
-          height={14}
+          width={96}
+          height={6}
         />
         <Visualizer
           analyser={analyserRightRef.current}
-          width={128}
-          height={14}
+          width={96}
+          height={6}
         />
       </div>
     </div>

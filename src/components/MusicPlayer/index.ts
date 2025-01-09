@@ -1,6 +1,6 @@
 export { default } from './MusicPlayer'
 export { TrackInfo } from './TrackInfo'
-export { PlayButton } from './PlayButton'
 export { Visualizer } from './Visualizer'
 export { AudioController } from './AudioController'
 export { formatTime } from './utils'
+export { PlaybackButtons } from './PlaybackButtons'

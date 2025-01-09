@@ -53,13 +53,27 @@ export class AudioController {
     const audioContext = this.props.audioContextRef.current
     const startTime = this.props.startTimeRef.current
     const pausedAt = this.props.pausedAtRef.current
+    const audioBuffer = this.props.audioBufferRef.current
 
-    if (!audioContext || !playing || startTime == null || pausedAt == null) {
+    if (
+      !audioContext ||
+      !playing ||
+      startTime == null ||
+      pausedAt == null ||
+      !audioBuffer
+    ) {
       return
     }
 
     const elapsed = audioContext.currentTime - startTime
     const currentPosition = pausedAt + elapsed
+
+    if (currentPosition >= audioBuffer.duration) {
+      this.stop()
+      onTimeUpdate(audioBuffer.duration)
+      return
+    }
+
     onTimeUpdate(currentPosition)
 
     if (this.props.requestAnimationFrameIdRef.current != null) {
@@ -148,6 +162,35 @@ export class AudioController {
       console.warn('Error while stopping source node:', error)
     }
 
+    if (this.props.requestAnimationFrameIdRef.current != null) {
+      cancelAnimationFrame(this.props.requestAnimationFrameIdRef.current)
+      this.props.requestAnimationFrameIdRef.current = null
+    }
+  }
+  stop(): void {
+    const audioContext = this.props.audioContextRef.current
+    const sourceNode = this.props.sourceNodeRef.current
+
+    if (!audioContext) {
+      console.warn('Cannot stop: AudioContext is missing')
+      return
+    }
+
+    if (sourceNode) {
+      try {
+        sourceNode.stop()
+        sourceNode.disconnect()
+        this.props.sourceNodeRef.current = null
+      } catch (error) {
+        console.warn('Error stopping source node:', error)
+      }
+    }
+
+    // Reset position to beginning
+    this.props.pausedAtRef.current = 0
+    this.props.startTimeRef.current = null
+
+    // Cancel any ongoing animation frame
     if (this.props.requestAnimationFrameIdRef.current != null) {
       cancelAnimationFrame(this.props.requestAnimationFrameIdRef.current)
       this.props.requestAnimationFrameIdRef.current = null
