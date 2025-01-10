@@ -37,12 +37,7 @@ const AppHeaderBar = ({
 
   return (
     <div className="flex flex-row w-full gap-2 py-2 px-3 bg-black border border-zinc-800 rounded-sm shadow-sm items-center justify-between">
-      <h1 className="px-1 text-2xl font-mono">DSSSP</h1>
-
       <div className="flex flex-row border rounded-sm border-zinc-800 relative">
-        <div className="text-zinc-500 w-[160px] py-1 px-3 text-center">
-          {presets[presetIndex].name}
-        </div>
         <button
           className={buttonClasses}
           onClick={handlePrevClick}
@@ -62,6 +57,9 @@ const AppHeaderBar = ({
             />
           </svg>
         </button>
+        <div className="text-zinc-500 w-[160px] py-1 px-3 text-center">
+          {presets[presetIndex].name}
+        </div>
         <button
           className={buttonClasses}
           onClick={handleNextClick}

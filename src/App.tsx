@@ -109,7 +109,7 @@ function App() {
           <div className={styles.glareOverlay}></div>
         </div>
 
-        <div className="flex gap-1 w-full">
+        <div className="flex gap-1 w-full pb-1">
           {filters.map((filter, index) => (
             <FilterCard
               index={index}
