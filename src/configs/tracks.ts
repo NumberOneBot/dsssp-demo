@@ -19,5 +19,12 @@ export const tracks = [
       'https://mqb-blog.com/sound/assets/896218_Gidon_Schocken_-_I_Owe_It_to_You_-_thumb.avif',
     artist: 'Gidon Schocken',
     title: 'I Owe It to You'
+  },
+  {
+    src: 'https://mqb-blog.com/sound/assets/Adam_North_Simons_-_One_Of_These_Days_-_BO-000184-5_-_Master_V1a_-_124_Bpm_-_210824_-_BOV_-_ORG_-_2444.aac',
+    cover:
+      'https://mqb-blog.com/sound/assets/948685_Adam_Simons_-_One_of_These_Days_-_A_-_Thum.avif',
+    artist: 'Adam Simons',
+    title: 'Lost You'
   }
 ]

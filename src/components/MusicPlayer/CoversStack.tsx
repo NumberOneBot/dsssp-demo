@@ -31,9 +31,9 @@ export const CoversStack = ({
             style={{
               width: 34 - layer * 6,
               height: 34 - layer * 6,
-              left: layer * -6,
+              left: layer * -5,
               top: layer * 3,
-              filter: `brightness(${100 - layer * 30}%)`
+              filter: `brightness(${100 - layer * 25}%)`
             }}
             onClick={() => (layer === 0 ? onClick(index) : null)}
           />

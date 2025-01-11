@@ -30,34 +30,28 @@ export class AudioController {
   async init(url: string): Promise<void> {
     try {
       this.props.onLoadingChange(true)
-      console.log('Initializing AudioController...')
 
       if (!this.audioContext) {
         const AudioContextConstructor =
           window.AudioContext || (window as any).webkitAudioContext
         this.audioContext = new AudioContextConstructor()
-        console.log('AudioContext created.')
 
         // Create AnalyserNodes
         this.analyserLeft = this.audioContext.createAnalyser()
         this.analyserRight = this.audioContext.createAnalyser()
         this.analyserLeft.fftSize = 32
         this.analyserRight.fftSize = 32
-        console.log('AnalyserNodes created.')
 
         // Create ChannelSplitterNode
         this.splitter = this.audioContext.createChannelSplitter(2)
-        console.log('ChannelSplitterNode created.')
 
         // Connect analysers to splitter
         if (this.splitter && this.analyserLeft && this.analyserRight) {
           this.splitter.connect(this.analyserLeft, 0)
           this.splitter.connect(this.analyserRight, 1)
-          console.log('AnalyserNodes connected to splitter.')
 
           // **Connect splitter to destination**
           this.splitter.connect(this.audioContext.destination)
-          console.log('Splitter connected to AudioContext.destination.')
 
           // Emit analyser availability event
           if (this.props.onAnalyserReady) {
@@ -65,7 +59,6 @@ export class AudioController {
               left: this.analyserLeft,
               right: this.analyserRight
             })
-            console.log('onAnalyserReady event emitted.')
           }
         } else {
           console.warn('Failed to initialize AnalyserNodes or splitter.')
@@ -74,7 +67,6 @@ export class AudioController {
 
       // Load track
       await this.loadTrack(url)
-      console.log('Track loaded.')
 
       this.props.onLoadingChange(false)
     } catch (error) {
@@ -99,7 +91,6 @@ export class AudioController {
         await this.sourceNode.stop()
         this.sourceNode.disconnect()
         this.sourceNode = null
-        console.log('Existing sourceNode stopped and disconnected.')
       } catch (error) {
         console.warn('Error stopping existing source node:', error)
       }
@@ -112,7 +103,6 @@ export class AudioController {
     }
     const arrayBuffer = await response.arrayBuffer()
     this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer)
-    console.log('Audio data decoded.')
 
     // Update duration
     this.props.onDurationChange(this.formatTime(this.audioBuffer.duration))
@@ -176,7 +166,6 @@ export class AudioController {
         this.sourceNode.stop()
         this.sourceNode.disconnect()
         this.sourceNode = null
-        console.log('Existing sourceNode stopped and disconnected.')
       } catch (error) {
         console.warn('Error stopping existing source node:', error)
       }
@@ -185,22 +174,18 @@ export class AudioController {
     const sourceNode = this.audioContext.createBufferSource()
     sourceNode.buffer = this.audioBuffer!
     this.sourceNode = sourceNode
-    console.log('New sourceNode created.')
 
     // Connect sourceNode to splitter
     if (this.splitter) {
       sourceNode.connect(this.splitter)
-      console.log('sourceNode connected to splitter.')
     } else {
       console.warn('ChannelSplitterNode is not initialized.')
       // As a fallback, connect directly to destination
       sourceNode.connect(this.audioContext.destination)
-      console.log('sourceNode connected directly to destination.')
     }
 
     try {
       sourceNode.start(0, this.pausedAt)
-      console.log('sourceNode started.')
     } catch (error) {
       console.error('Error starting source node:', error)
       return
@@ -223,7 +208,6 @@ export class AudioController {
       this.sourceNode.stop()
       this.sourceNode.disconnect()
       this.sourceNode = null
-      console.log('sourceNode stopped and disconnected.')
     } catch (error) {
       console.warn('Error while stopping source node:', error)
     }
@@ -231,7 +215,6 @@ export class AudioController {
     if (this.requestAnimationFrameId != null) {
       cancelAnimationFrame(this.requestAnimationFrameId)
       this.requestAnimationFrameId = null
-      console.log('Animation frame canceled.')
     }
   }
 
@@ -246,7 +229,6 @@ export class AudioController {
         this.sourceNode.stop()
         this.sourceNode.disconnect()
         this.sourceNode = null
-        console.log('sourceNode stopped and disconnected.')
       } catch (error) {
         console.warn('Error stopping source node:', error)
       }
@@ -258,7 +240,6 @@ export class AudioController {
     if (this.requestAnimationFrameId != null) {
       cancelAnimationFrame(this.requestAnimationFrameId)
       this.requestAnimationFrameId = null
-      console.log('Animation frame canceled.')
     }
   }
 
@@ -268,7 +249,6 @@ export class AudioController {
       try {
         this.sourceNode.stop()
         this.sourceNode.disconnect()
-        console.log('sourceNode stopped and disconnected during cleanup.')
       } catch (error) {
         console.warn('Error stopping source node during cleanup:', error)
       }
@@ -278,7 +258,6 @@ export class AudioController {
     if (this.requestAnimationFrameId != null) {
       cancelAnimationFrame(this.requestAnimationFrameId)
       this.requestAnimationFrameId = null
-      console.log('Animation frame canceled during cleanup.')
     }
 
     // Close AudioContext
@@ -287,14 +266,12 @@ export class AudioController {
         console.warn('Error closing AudioContext during cleanup:', error)
       })
       this.audioContext = null
-      console.log('AudioContext closed during cleanup.')
     }
 
     // Clear analysers and splitter
     this.analyserLeft = null
     this.analyserRight = null
     this.splitter = null
-    console.log('AnalyserNodes and splitter cleared during cleanup.')
   }
 
   getAnalyserNodes() {

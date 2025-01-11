@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "dsssp": "^0.1.9-alpha.2",
+    "dsssp": "^0.1.10-alpha.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
