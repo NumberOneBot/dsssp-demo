@@ -75,7 +75,7 @@ const MusicPlayer: React.FC = () => {
         onChangeTrack={handleChangeTrack}
       />
 
-      <div className={clsx({ 'pointer-events-none opacity-50': loading })}>
+      <div className={clsx({ 'pointer-events-none': loading })}>
         <PlaybackButtons
           playing={playing}
           onStop={handleStop}
