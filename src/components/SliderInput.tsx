@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { FilterInput } from '.'
 import styles from './SliderInput.module.css'
 import colors from 'tailwindcss/colors'
@@ -13,7 +14,7 @@ const SliderInput = ({
   log = false
 }: {
   value: number
-  onChange: (value: number) => void
+  onChange: (value: number, ended: boolean) => void
   min?: number
   max?: number
   step?: number
@@ -21,6 +22,8 @@ const SliderInput = ({
   label?: string
   log?: boolean
 }) => {
+  const dragging = useRef(false)
+
   const linearToLog = (linear: number): number => {
     const minv = Math.log(min)
     const maxv = Math.log(max)
@@ -38,8 +41,23 @@ const SliderInput = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = Number(e.target.value)
     if (log) newValue = linearToLog(newValue)
-    onChange(newValue)
+    onChange(newValue, false)
   }
+
+  const handleMouseUp = () => {
+    if (!dragging.current) return
+    dragging.current = false
+    onChange(value, true)
+  }
+
+  const handleTouchEnd = () => {
+    if (!dragging.current) return
+    dragging.current = false
+    onChange(value, true)
+  }
+
+  const handleMouseDown = () => (dragging.current = true)
+  const handleTouchStart = () => (dragging.current = true)
 
   const sliderValue = log ? logToLinear(value) : value
 
@@ -84,6 +102,10 @@ const SliderInput = ({
             step={step}
             value={sliderValue}
             onChange={handleChange}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
             className={styles.slider}
             style={
               {
@@ -100,7 +122,7 @@ const SliderInput = ({
         <FilterInput
           value={value}
           precision={2}
-          onChange={onChange}
+          onChange={(value) => onChange(value, true)}
         />
       </div>
     </div>

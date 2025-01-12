@@ -64,7 +64,7 @@ const FilterCard = ({
 
   return (
     <div
-      onMouseEnter={() => onEnter?.({ index })}
+      onMouseEnter={() => onEnter?.({ ...filter, index })}
       onMouseLeave={onLeave}
       className={clsx(
         'flex flex-col flex-1 gap-2 items-center shadow-sm border rounded-sm p-2 text-center transition-colors duration-200 bg-zinc-900 overflow-hidden',
@@ -79,7 +79,7 @@ const FilterCard = ({
       <FilterSelect
         color={color}
         filter={filter}
-        onChange={(type) => onChange({ index, type })}
+        onChange={(type) => onChange({ ...filter, index, type, ended: true })}
       />
 
       <FilterInput
@@ -87,7 +87,7 @@ const FilterCard = ({
         precision={0}
         label="Frequency"
         value={filter.freq}
-        onChange={(freq) => onChange({ index, freq })}
+        onChange={(freq) => onChange({ ...filter, index, freq, ended: true })}
       />
 
       <div className="flex flex-row gap-2 w-full">
@@ -97,7 +97,9 @@ const FilterCard = ({
           step={0.1}
           label="Gain"
           value={filter.gain}
-          onChange={(gain) => onChange({ index, gain })}
+          onChange={(gain, ended) =>
+            onChange({ ...filter, index, gain, ended })
+          }
         />
 
         <SliderInput
@@ -107,7 +109,7 @@ const FilterCard = ({
           step={0.1}
           label="Q"
           value={filter.q}
-          onChange={(q) => onChange({ index, q })}
+          onChange={(q, ended) => onChange({ ...filter, index, q, ended })}
         />
       </div>
     </div>

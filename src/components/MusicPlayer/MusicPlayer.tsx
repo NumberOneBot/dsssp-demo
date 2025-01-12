@@ -1,10 +1,15 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
+import { type BiQuadCoefficients } from 'dsssp'
 import clsx from 'clsx'
 
 import { AudioController, TrackInfo, Visualizer, PlaybackButtons } from '.'
 import { tracks } from '../../configs/tracks'
 
-const MusicPlayer: React.FC = () => {
+const MusicPlayer = ({
+  coefficients
+}: {
+  coefficients: BiQuadCoefficients[]
+}) => {
   const [loading, setLoading] = useState(true)
   const [playing, setPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState('0:00')
@@ -23,7 +28,8 @@ const MusicPlayer: React.FC = () => {
       onTrackEnd: () => setPlaying(false),
       onDurationChange: setDuration,
       onLoadingChange: setLoading,
-      onAnalyserReady: setAnalysers
+      onAnalyserReady: setAnalysers,
+      filters: coefficients
     })
 
     audioController.current.init(tracks[activeTrack].src).catch((error) => {
@@ -34,6 +40,13 @@ const MusicPlayer: React.FC = () => {
       audioController.current?.cleanup()
     }
   }, [])
+
+  useEffect(() => {
+    if (audioController.current) {
+      console.log('coefficients', coefficients)
+      audioController.current.updateFilters(coefficients)
+    }
+  }, [coefficients])
 
   const handleStop = () => {
     audioController.current?.stop()

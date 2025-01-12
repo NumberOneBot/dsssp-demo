@@ -20,7 +20,7 @@
 
 .slider::-webkit-slider-thumb {
   appearance: none;
-  width: 13px;
+  width: 14px;
   height: 36px;
   margin: -17px 0;
   background: var(--color-zinc-600);

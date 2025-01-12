@@ -4,10 +4,12 @@ import {
   CompositeCurve,
   FilterCurve,
   FilterGradient,
-  FilterPoint,
   type FilterChangeEvent,
+  FilterPoint,
   PointerTracker,
-  GraphFilter
+  type GraphFilter,
+  type BiQuadCoefficients,
+  calcFilterCoefficients
 } from 'dsssp'
 
 import { AppHeaderBar, FilterCard } from './components'
@@ -19,13 +21,37 @@ import scale from './configs/scale'
 import styles from './App.module.css'
 
 function App() {
+  const calcVars = (filters: GraphFilter[]) =>
+    filters.map((filter) => {
+      return calcFilterCoefficients(scale.sampleRate, filter)
+    })
+
+  const customPresetCoefficients = calcVars(customPreset)
+
+  const [altered, setAltered] = useState(false)
   const [filters, setFilters] = useState(customPreset)
-  const [presetCache, setPresetCache] = useState(customPreset)
+  const [coefficients, setCoefficients] = useState<BiQuadCoefficients[]>(
+    customPresetCoefficients
+  )
+
   const [dragging, setDragging] = useState(false)
   const [activeIndex, setActiveIndex] = useState<number>(-1)
 
-  const handleFilterChange = ({ index, ...filterEvent }: FilterChangeEvent) => {
-    const { ended, ...filter } = filterEvent
+  const handleFilterChange = (filterEvent: FilterChangeEvent) => {
+    const { index, ended, ...filter } = filterEvent
+
+    if (ended) {
+      setCoefficients((prevCoefficients) => {
+        const newCoefficients = [...prevCoefficients]
+        newCoefficients[index] = calcFilterCoefficients(
+          scale.sampleRate,
+          filter
+        )
+        return newCoefficients
+      })
+      setAltered(true)
+    }
+
     setFilters((prevFilters) => {
       const newFilters = [...prevFilters]
       newFilters[index] = { ...newFilters[index], ...filter }
@@ -45,23 +71,20 @@ function App() {
     if (!dragging) setActiveIndex(index)
   }
 
-  const handlePresetChange = (
-    newFilters: GraphFilter[],
-    newIndex: number,
-    prevIndex: number
-  ) => {
-    // cache `custom` preset (index = 0)
-    if (prevIndex === 0) setPresetCache(filters)
-
-    // restore `custom` preset from cache
-    // or load new preset
-    setFilters(newIndex === 0 ? presetCache : newFilters)
+  const handlePresetChange = (newFilters: GraphFilter[]) => {
+    setAltered(false)
+    setFilters(newFilters)
+    setCoefficients(calcVars(newFilters))
   }
 
   return (
-    <div className="bg-zinc-950 text-white text-sans min-h-screen flex flex-col items-center">
+    <div className="text-white text-sans min-h-screen flex flex-col items-center">
       <div className="max-w-[840px] pt-1 flex flex-col gap-1">
-        <AppHeaderBar onPresetChange={handlePresetChange} />
+        <AppHeaderBar
+          altered={altered}
+          coefficients={coefficients} // prop-drilling them down to the MusicPlayer
+          onPresetChange={handlePresetChange}
+        />
 
         <div className="shadow-sm shadow-black relative">
           <FrequencyResponseGraph
@@ -121,16 +144,6 @@ function App() {
             />
           ))}
         </div>
-        {/* <div className="mt-4">
-          The intent of this demo is to show how to use the DSSSP library to
-          create a parametric equalizer. The filters are represented by the
-          colored curves and the filter points can be dragged to change the
-          filter parameters. The frequency response of the filters is shown in
-          the graph. The filters can be added or removed by modifying the
-          filters array in the App component. The filters are applied in the
-          order they are defined in the array. The filters are implemented using
-          the biquad filter implementation in the Web Audio API.
-        </div> */}
       </div>
     </div>
   )

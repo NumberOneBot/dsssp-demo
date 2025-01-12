@@ -1,3 +1,5 @@
+import { type BiQuadCoefficients } from 'dsssp'
+
 export interface AudioControllerProps {
   onTimeUpdate: (time: string) => void
   onDurationChange: (duration: string) => void
@@ -6,7 +8,8 @@ export interface AudioControllerProps {
   onAnalyserReady?: (analyser: {
     left: AnalyserNode
     right: AnalyserNode
-  }) => void // New event
+  }) => void
+  filters: BiQuadCoefficients[]
 }
 
 export class AudioController {
@@ -19,14 +22,11 @@ export class AudioController {
   private analyserLeft: AnalyserNode | null = null
   private analyserRight: AnalyserNode | null = null
   private splitter: ChannelSplitterNode | null = null
+  private biquadFilters: IIRFilterNode[] = []
+  private gainNode: GainNode | null = null
 
   constructor(private props: AudioControllerProps) {}
 
-  /**
-   * Initializes AudioContext, Splitter, and Analyser only once.
-   * Loading a new track is done through the loadTrack method.
-   * @param url URL of the audio file.
-   */
   async init(url: string): Promise<void> {
     try {
       this.props.onLoadingChange(true)
@@ -36,36 +36,34 @@ export class AudioController {
           window.AudioContext || (window as any).webkitAudioContext
         this.audioContext = new AudioContextConstructor()
 
-        // Create AnalyserNodes
-        this.analyserLeft = this.audioContext.createAnalyser()
-        this.analyserRight = this.audioContext.createAnalyser()
-        this.analyserLeft.fftSize = 32
-        this.analyserRight.fftSize = 32
+        this.gainNode = this.audioContext.createGain()
+        this.gainNode.gain.value = 1
+        this.gainNode.connect(this.audioContext.destination)
 
-        // Create ChannelSplitterNode
         this.splitter = this.audioContext.createChannelSplitter(2)
 
-        // Connect analysers to splitter
-        if (this.splitter && this.analyserLeft && this.analyserRight) {
-          this.splitter.connect(this.analyserLeft, 0)
-          this.splitter.connect(this.analyserRight, 1)
+        this.analyserLeft = this.audioContext.createAnalyser()
+        this.analyserRight = this.audioContext.createAnalyser()
 
-          // **Connect splitter to destination**
-          this.splitter.connect(this.audioContext.destination)
+        this.splitter.connect(this.analyserLeft, 0)
+        this.splitter.connect(this.analyserRight, 1)
+        ;[this.analyserLeft, this.analyserRight].forEach((analyzer) => {
+          analyzer.fftSize = 32
+          // analyzer.maxDecibels = -2 // dB
+          // analyzer.minDecibels = -48
+          analyzer.smoothingTimeConstant = 0.4 // 0.8
+        })
 
-          // Emit analyser availability event
-          if (this.props.onAnalyserReady) {
-            this.props.onAnalyserReady({
-              left: this.analyserLeft,
-              right: this.analyserRight
-            })
-          }
-        } else {
-          console.warn('Failed to initialize AnalyserNodes or splitter.')
+        if (this.props.onAnalyserReady) {
+          this.props.onAnalyserReady({
+            left: this.analyserLeft,
+            right: this.analyserRight
+          })
         }
+
+        await this.createFilters()
       }
 
-      // Load track
       await this.loadTrack(url)
 
       this.props.onLoadingChange(false)
@@ -76,16 +74,110 @@ export class AudioController {
     }
   }
 
-  /**
-   * Loads an audio file and decodes it.
-   * @param url URL of the audio file.
-   */
+  private getCurrentTime(): number {
+    if (!this.startTime || !this.audioContext) return this.pausedAt
+    const elapsed = this.audioContext.currentTime - this.startTime
+    return this.pausedAt + elapsed
+  }
+
+  private async fadeGainTo(
+    value: number,
+    duration: number = 0.05
+  ): Promise<void> {
+    if (!this.gainNode || !this.audioContext) return
+
+    const currentTime = this.audioContext.currentTime
+    this.gainNode.gain.linearRampToValueAtTime(value, currentTime + duration)
+
+    return new Promise((resolve) => setTimeout(resolve, duration * 1000))
+  }
+
+  private async createFilters(): Promise<void> {
+    if (!this.audioContext) return
+
+    this.biquadFilters = []
+
+    for (const filter of this.props.filters) {
+      const { A0, A1, A2, B1, B2 } = filter
+      const feedforward = [A0, A1, A2]
+      const feedback = [1, B1, B2]
+
+      try {
+        const iirFilter = new IIRFilterNode(this.audioContext, {
+          feedforward,
+          feedback
+        })
+
+        if (!iirFilter) {
+          console.error('Error creating IIR filter')
+          continue
+        }
+
+        this.biquadFilters.push(iirFilter)
+      } catch (error) {
+        console.error('Error creating IIR filter:', error)
+      }
+    }
+  }
+
+  private connectAudioGraph(): void {
+    if (
+      !this.sourceNode ||
+      !this.audioContext ||
+      !this.gainNode ||
+      !this.splitter
+    )
+      return
+
+    this.sourceNode.disconnect()
+
+    let currentNode: AudioNode = this.sourceNode
+
+    if (this.biquadFilters.length > 0) {
+      this.biquadFilters.forEach((filter, index) => {
+        filter.disconnect()
+        currentNode.connect(filter)
+        currentNode = filter
+      })
+    }
+
+    currentNode.connect(this.splitter)
+    currentNode.connect(this.gainNode)
+  }
+
+  async updateFilters(newFilters: BiQuadCoefficients[]): Promise<void> {
+    if (!this.audioContext) return
+
+    this.props.filters = newFilters
+
+    const wasPlaying = this.sourceNode !== null
+    const currentTime = this.getCurrentTime()
+    // Record the start time of filters reconnection
+    const filtersStartTime = performance.now()
+
+    if (wasPlaying) await this.pause()
+
+    await this.createFilters()
+
+    if (wasPlaying) {
+      const filterEndTime = performance.now()
+      const timeSpentSeconds = (filterEndTime - filtersStartTime) / 1000
+      // Adjust the pausedAt to account for the time spent during filter update
+      this.pausedAt = currentTime + timeSpentSeconds
+      // Resume playback from the adjusted position
+      await this.play()
+    } else {
+      if (this.sourceNode && this.splitter) {
+        this.connectAudioGraph()
+      }
+    }
+  }
+
   private async loadTrack(url: string): Promise<void> {
     if (!this.audioContext) {
       throw new Error('AudioContext is not initialized.')
     }
 
-    // Stop and disconnect existing sourceNode if it exists
     if (this.sourceNode) {
       try {
         await this.sourceNode.stop()
@@ -96,7 +188,6 @@ export class AudioController {
       }
     }
 
-    // Load audio
     const response = await fetch(url, { mode: 'cors' })
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
@@ -104,7 +195,6 @@ export class AudioController {
     const arrayBuffer = await response.arrayBuffer()
     this.audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer)
 
-    // Update duration
     this.props.onDurationChange(this.formatTime(this.audioBuffer.duration))
   }
 
@@ -120,9 +210,8 @@ export class AudioController {
       !playing ||
       this.startTime == null ||
       !this.audioBuffer
-    ) {
+    )
       return
-    }
 
     const elapsed = this.audioContext.currentTime - this.startTime
     const currentPosition = this.pausedAt + elapsed
@@ -144,23 +233,18 @@ export class AudioController {
     )
   }
 
-  play(): void {
+  async play(): Promise<void> {
     if (
       !this.audioContext ||
       !this.audioBuffer ||
       this.pausedAt >= this.audioBuffer.duration
-    ) {
-      console.warn('Cannot play: missing resources or end of track')
+    )
       return
-    }
 
     if (this.audioContext.state === 'suspended') {
-      this.audioContext.resume().catch((error) => {
-        console.error('Error resuming AudioContext:', error)
-      })
+      await this.audioContext.resume()
     }
 
-    // Stop and disconnect previous sourceNode if it exists
     if (this.sourceNode) {
       try {
         this.sourceNode.stop()
@@ -172,17 +256,10 @@ export class AudioController {
     }
 
     const sourceNode = this.audioContext.createBufferSource()
-    sourceNode.buffer = this.audioBuffer!
+    sourceNode.buffer = this.audioBuffer
     this.sourceNode = sourceNode
 
-    // Connect sourceNode to splitter
-    if (this.splitter) {
-      sourceNode.connect(this.splitter)
-    } else {
-      console.warn('ChannelSplitterNode is not initialized.')
-      // As a fallback, connect directly to destination
-      sourceNode.connect(this.audioContext.destination)
-    }
+    this.connectAudioGraph()
 
     try {
       sourceNode.start(0, this.pausedAt)
@@ -193,13 +270,14 @@ export class AudioController {
 
     this.startTime = this.audioContext.currentTime
     this.updatePosition(true)
+
+    await this.fadeGainTo(1, 0.3)
   }
 
-  pause(): void {
-    if (!this.audioContext || !this.sourceNode || this.startTime == null) {
-      console.warn('Cannot pause: missing resources')
-      return
-    }
+  async pause(): Promise<void> {
+    if (!this.audioContext || !this.sourceNode || this.startTime == null) return
+
+    await this.fadeGainTo(0, 0.1)
 
     const elapsed = this.audioContext.currentTime - this.startTime
     this.pausedAt += elapsed
@@ -219,10 +297,7 @@ export class AudioController {
   }
 
   stop(): void {
-    if (!this.audioContext) {
-      console.warn('Cannot stop: AudioContext is missing')
-      return
-    }
+    if (!this.audioContext) return
 
     if (this.sourceNode) {
       try {
@@ -244,7 +319,6 @@ export class AudioController {
   }
 
   cleanup(): void {
-    // Stop and disconnect sourceNode
     if (this.sourceNode) {
       try {
         this.sourceNode.stop()
@@ -254,13 +328,11 @@ export class AudioController {
       }
     }
 
-    // Cancel position animation
     if (this.requestAnimationFrameId != null) {
       cancelAnimationFrame(this.requestAnimationFrameId)
       this.requestAnimationFrameId = null
     }
 
-    // Close AudioContext
     if (this.audioContext) {
       this.audioContext.close().catch((error) => {
         console.warn('Error closing AudioContext during cleanup:', error)
@@ -268,20 +340,9 @@ export class AudioController {
       this.audioContext = null
     }
 
-    // Clear analysers and splitter
     this.analyserLeft = null
     this.analyserRight = null
     this.splitter = null
-  }
-
-  getAnalyserNodes() {
-    if (!this.analyserLeft || !this.analyserRight) {
-      console.warn('Analyser nodes are not available.')
-      return null
-    }
-    return {
-      left: this.analyserLeft,
-      right: this.analyserRight
-    }
+    this.gainNode = null
   }
 }
