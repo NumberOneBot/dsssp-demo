@@ -5,12 +5,14 @@ interface VisualizerProps {
   width?: number
   height?: number
   maxFPS?: number // Optional prop for maximum frame rate
+  amplitude?: 'average' | 'max'
 }
 
 export const Visualizer: React.FC<VisualizerProps> = ({
   analyser,
   width = 200,
   height = 20,
+  amplitude = 'average',
   maxFPS
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -28,7 +30,7 @@ export const Visualizer: React.FC<VisualizerProps> = ({
     const bufferLength = analyser.frequencyBinCount
     const dataArray = new Uint8Array(bufferLength)
 
-    const totalSegments = 24
+    const totalSegments = 16
     const segmentWidth = width / totalSegments
 
     const getSegmentColor = (
@@ -65,14 +67,21 @@ export const Visualizer: React.FC<VisualizerProps> = ({
       ctx.fillStyle = 'black'
       ctx.fillRect(0, 0, width, height)
 
-      let sum = 0
-      for (let i = 0; i < bufferLength; i++) {
-        sum += dataArray[i]
+      let ratio: number
+      if (amplitude === 'max') {
+        // Find maximum amplitude
+        const maxAmplitude = Math.max(...Array.from(dataArray))
+        ratio = maxAmplitude / 255 // 0..1
+      } else {
+        // Calculate average amplitude
+        const sum = dataArray.reduce((a, b) => a + b, 0)
+        const avgAmplitude = sum / bufferLength
+        ratio = avgAmplitude / 255 // 0..1
       }
-      const avgAmplitude = sum / bufferLength
-      const ratio = avgAmplitude / 255 // 0..1
+
       const activeSegments = Math.floor(ratio * totalSegments)
 
+      // Rest of drawing logic remains the same
       for (let i = 0; i < totalSegments; i++) {
         if (i < activeSegments) {
           const lastActive = i === activeSegments - 1
