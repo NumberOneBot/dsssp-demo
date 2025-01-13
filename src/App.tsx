@@ -25,7 +25,7 @@ import styles from './App.module.css'
 function App() {
   const calcVars = (filters: GraphFilter[]) =>
     filters.map((filter) => {
-      return calcFilterCoefficients(scale.sampleRate, filter)
+      return calcFilterCoefficients(filter, scale.sampleRate)
     })
   const customPresetCoefficients = calcVars(customPreset)
 
@@ -46,8 +46,8 @@ function App() {
       setCoefficients((prevCoefficients) => {
         const newCoefficients = [...prevCoefficients]
         newCoefficients[index] = calcFilterCoefficients(
-          scale.sampleRate,
-          filter
+          filter,
+          scale.sampleRate
         )
         return newCoefficients
       })

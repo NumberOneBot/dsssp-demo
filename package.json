@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "clsx": "^2.1.1",
-    "dsssp": "^0.1.12-alpha.0",
+    "dsssp": "^0.1.12-alpha.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^5.0.0"

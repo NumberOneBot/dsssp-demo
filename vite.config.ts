@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => {
     base: mode === 'development' ? '/' : '/dsssp-demo/',
     // base: '/',
     server: {
-      port: 3030,
+      port: 3003,
       open: true
     },
     build: {
