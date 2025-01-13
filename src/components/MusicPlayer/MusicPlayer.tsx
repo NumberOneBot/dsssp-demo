@@ -6,8 +6,10 @@ import { AudioController, TrackInfo, Visualizer, PlaybackButtons } from '.'
 import { tracks } from '../../configs/tracks'
 
 const MusicPlayer = ({
+  powered = true,
   coefficients
 }: {
+  powered?: boolean
   coefficients: BiQuadCoefficients[]
 }) => {
   const [loading, setLoading] = useState(true)
@@ -21,6 +23,12 @@ const MusicPlayer = ({
   } | null>(null)
 
   const audioController = useRef<AudioController | null>(null)
+
+  const handleStop = () => {
+    audioController.current?.stop()
+    setCurrentTime('0:00')
+    setPlaying(false)
+  }
 
   useEffect(() => {
     audioController.current = new AudioController({
@@ -42,17 +50,9 @@ const MusicPlayer = ({
   }, [])
 
   useEffect(() => {
-    if (audioController.current) {
-      console.log('coefficients', coefficients)
+    if (audioController.current)
       audioController.current.updateFilters(coefficients)
-    }
   }, [coefficients])
-
-  const handleStop = () => {
-    audioController.current?.stop()
-    setCurrentTime('0:00')
-    setPlaying(false)
-  }
 
   useEffect(() => {
     if (audioController.current) {
@@ -77,6 +77,14 @@ const MusicPlayer = ({
     setCurrentTime('0:00')
     setPlaying(false)
   }, [])
+
+  useEffect(() => {
+    if (powered) {
+      audioController.current?.enableFilters()
+    } else {
+      audioController.current?.disableFilters()
+    }
+  }, [powered])
 
   return (
     <div className="w-[350px] flex flex-row gap-3 items-center justify-end">

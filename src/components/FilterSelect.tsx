@@ -12,16 +12,22 @@ import 'dsssp/font'
 const FilterSelect = ({
   color,
   filter,
+  disabled,
   onChange
 }: {
   color?: string
   filter: GraphFilter
+  disabled: boolean
   onChange: (type: FilterType) => void
 }) => {
   const [opened, setOpened] = useState<boolean>(false)
 
   return (
-    <div>
+    <div
+      className={clsx('transition-opacity duration-150', {
+        'opacity-50 pointer-events-none': disabled
+      })}
+    >
       <div className="font-semibold text-sm text-zinc-500 z-10 relative">
         Type
       </div>

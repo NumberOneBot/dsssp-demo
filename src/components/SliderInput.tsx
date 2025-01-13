@@ -1,7 +1,8 @@
 import { useRef } from 'react'
 import { FilterInput } from '.'
 import styles from './SliderInput.module.css'
-import colors from 'tailwindcss/colors'
+import tailwindColors from 'tailwindcss/colors'
+import clsx from 'clsx'
 
 const SliderInput = ({
   value,
@@ -11,7 +12,8 @@ const SliderInput = ({
   step = 1,
   height = 96,
   label,
-  log = false
+  log = false,
+  disabled
 }: {
   value: number
   onChange: (value: number, ended: boolean) => void
@@ -21,6 +23,7 @@ const SliderInput = ({
   height?: number
   label?: string
   log?: boolean
+  disabled?: boolean
 }) => {
   const dragging = useRef(false)
 
@@ -77,22 +80,34 @@ const SliderInput = ({
 
   const fillStart = percentage < zeroPercentage ? percentage : zeroPercentage
   const fillEnd = percentage < zeroPercentage ? zeroPercentage : percentage
-  const fillColor = log
-    ? colors.cyan[700]
-    : value > 0
-      ? colors.green[700]
-      : colors.red[800]
+  const fillColor = disabled
+    ? tailwindColors.black
+    : log
+      ? tailwindColors.cyan[700]
+      : value > 0
+        ? tailwindColors.green[700]
+        : tailwindColors.red[800]
 
   return (
     <div>
       {label && (
-        <div className="pb-1 text-sm font-semibold text-zinc-500 drop-shadow-lg">
+        <div
+          className={clsx(
+            'pb-1 text-sm font-semibold text-zinc-500 drop-shadow-lg transition-opacity duration-150',
+            { 'opacity-50 pointer-events-none': disabled }
+          )}
+        >
           {label}
         </div>
       )}
       <div className="py-1 w-full rounded-sm">
         <div
-          className="mx-auto flex items-center justify-center "
+          className={clsx(
+            'mx-auto flex items-center justify-center transition-opacity duration-150',
+            {
+              'opacity-50 pointer-events-none': disabled
+            }
+          )}
           style={{ height, width: '38px' }}
         >
           <input
@@ -122,6 +137,7 @@ const SliderInput = ({
         <FilterInput
           value={value}
           precision={2}
+          disabled={disabled}
           onChange={(value) => onChange(value, true)}
         />
       </div>

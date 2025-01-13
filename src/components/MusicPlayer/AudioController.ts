@@ -24,6 +24,7 @@ export class AudioController {
   private splitter: ChannelSplitterNode | null = null
   private biquadFilters: IIRFilterNode[] = []
   private gainNode: GainNode | null = null
+  private filteringEnabled: boolean = true
 
   constructor(private props: AudioControllerProps) {}
 
@@ -34,7 +35,16 @@ export class AudioController {
       if (!this.audioContext) {
         const AudioContextConstructor =
           window.AudioContext || (window as any).webkitAudioContext
-        this.audioContext = new AudioContextConstructor()
+        const desiredSampleRate = 44100
+        this.audioContext = new AudioContextConstructor({
+          sampleRate: desiredSampleRate
+        })
+
+        if (this.audioContext.sampleRate !== desiredSampleRate) {
+          console.warn(
+            `Desired sample rate of ${desiredSampleRate} Hz not supported. Using ${this.audioContext.sampleRate} Hz instead.`
+          )
+        }
 
         this.gainNode = this.audioContext.createGain()
         this.gainNode.gain.value = 1
@@ -49,9 +59,7 @@ export class AudioController {
         this.splitter.connect(this.analyserRight, 1)
         ;[this.analyserLeft, this.analyserRight].forEach((analyzer) => {
           analyzer.fftSize = 32
-          // analyzer.maxDecibels = -2 // dB
-          // analyzer.minDecibels = -48
-          analyzer.smoothingTimeConstant = 0.4 // 0.8
+          analyzer.smoothingTimeConstant = 0.4
         })
 
         if (this.props.onAnalyserReady) {
@@ -72,6 +80,38 @@ export class AudioController {
       this.props.onLoadingChange(false)
       throw error
     }
+  }
+
+  /**
+   * Toggles filter state with common logic for enabling and disabling filters.
+   * @param enable - Whether to enable or disable filters.
+   */
+  private async toggleFilters(enable: boolean): Promise<void> {
+    if (this.filteringEnabled === enable) return
+
+    const wasPlaying = this.sourceNode !== null
+    const currentTime = this.getCurrentTime()
+
+    if (wasPlaying) {
+      await this.pause()
+    }
+
+    this.filteringEnabled = enable
+
+    if (wasPlaying) {
+      this.pausedAt = currentTime
+      await this.play()
+    } else if (this.sourceNode && this.splitter) {
+      this.connectAudioGraph()
+    }
+  }
+
+  async enableFilters(): Promise<void> {
+    await this.toggleFilters(true)
+  }
+
+  async disableFilters(): Promise<void> {
+    await this.toggleFilters(false)
   }
 
   private getCurrentTime(): number {
@@ -95,6 +135,7 @@ export class AudioController {
   private async createFilters(): Promise<void> {
     if (!this.audioContext) return
 
+    this.biquadFilters.forEach((filter) => filter.disconnect())
     this.biquadFilters = []
 
     for (const filter of this.props.filters) {
@@ -120,6 +161,7 @@ export class AudioController {
     }
   }
 
+  // Source -> [Filters (if enabled)] -> Splitter -> Analyzers -> GainNode -> Destination
   private connectAudioGraph(): void {
     if (
       !this.sourceNode ||
@@ -130,12 +172,12 @@ export class AudioController {
       return
 
     this.sourceNode.disconnect()
+    this.biquadFilters.forEach((filter) => filter.disconnect())
 
     let currentNode: AudioNode = this.sourceNode
 
-    if (this.biquadFilters.length > 0) {
-      this.biquadFilters.forEach((filter, index) => {
-        filter.disconnect()
+    if (this.filteringEnabled && this.biquadFilters.length > 0) {
+      this.biquadFilters.forEach((filter) => {
         currentNode.connect(filter)
         currentNode = filter
       })
@@ -277,7 +319,7 @@ export class AudioController {
   async pause(): Promise<void> {
     if (!this.audioContext || !this.sourceNode || this.startTime == null) return
 
-    await this.fadeGainTo(0, 0.1)
+    await this.fadeGainTo(0, 0.15)
 
     const elapsed = this.audioContext.currentTime - this.startTime
     this.pausedAt += elapsed

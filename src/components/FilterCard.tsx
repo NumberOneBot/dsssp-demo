@@ -39,6 +39,7 @@ const FilterCard = ({
   index = -1,
   active,
   filter,
+  disabled,
   onEnter,
   onLeave,
   onChange
@@ -46,11 +47,13 @@ const FilterCard = ({
   index: number
   active: boolean
   filter: GraphFilter
+  disabled: boolean
   onLeave?: () => void
   onEnter?: (event: FilterChangeEvent) => void
   onChange: (event: FilterChangeEvent) => void
 }) => {
   const [noiseDataUrl, setNoiseDataUrl] = useState<string>('')
+  if (disabled) filter = { type: 'BYPASS', freq: 0, gain: 0, q: 1 }
 
   useEffect(() => {
     const noise = generateNoise(50, 50, 0.1)
@@ -68,7 +71,7 @@ const FilterCard = ({
       onMouseLeave={onLeave}
       className={clsx(
         'flex flex-col flex-1 gap-2 items-center shadow-sm border rounded-sm p-2 text-center transition-colors duration-200 bg-zinc-900 overflow-hidden',
-        active ? ' border-zinc-600' : ' border-zinc-800'
+        active && !disabled ? ' border-zinc-600' : ' border-zinc-800'
       )}
       style={{
         backgroundImage: `url(${noiseDataUrl})`,
@@ -79,6 +82,7 @@ const FilterCard = ({
       <FilterSelect
         color={color}
         filter={filter}
+        disabled={disabled}
         onChange={(type) => onChange({ ...filter, index, type, ended: true })}
       />
 
@@ -87,6 +91,7 @@ const FilterCard = ({
         precision={0}
         label="Frequency"
         value={filter.freq}
+        disabled={disabled}
         onChange={(freq) => onChange({ ...filter, index, freq, ended: true })}
       />
 
@@ -97,6 +102,7 @@ const FilterCard = ({
           step={0.1}
           label="Gain"
           value={filter.gain}
+          disabled={disabled}
           onChange={(gain, ended) =>
             onChange({ ...filter, index, gain, ended })
           }
@@ -109,6 +115,7 @@ const FilterCard = ({
           step={0.1}
           label="Q"
           value={filter.q}
+          disabled={disabled}
           onChange={(q, ended) => onChange({ ...filter, index, q, ended })}
         />
       </div>

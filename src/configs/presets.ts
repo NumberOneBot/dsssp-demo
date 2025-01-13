@@ -71,7 +71,7 @@ export const flatPreset: GraphFilter[] = [
 ]
 
 const presets = [
-  { name: 'Custom Preset', filters: customPreset },
+  { name: 'Custom', filters: customPreset },
   { name: 'Bright', filters: brightPreset },
   { name: 'Excited', filters: excitedPreset },
   { name: 'Vocal', filters: vocalPreset },

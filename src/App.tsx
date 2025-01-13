@@ -9,8 +9,10 @@ import {
   PointerTracker,
   type GraphFilter,
   type BiQuadCoefficients,
-  calcFilterCoefficients
+  calcFilterCoefficients,
+  FrequencyResponseCurve
 } from 'dsssp'
+import tailwindColors from 'tailwindcss/colors'
 
 import { AppHeaderBar, FilterCard } from './components'
 
@@ -25,9 +27,9 @@ function App() {
     filters.map((filter) => {
       return calcFilterCoefficients(scale.sampleRate, filter)
     })
-
   const customPresetCoefficients = calcVars(customPreset)
 
+  const [powered, setPowered] = useState(true)
   const [altered, setAltered] = useState(false)
   const [filters, setFilters] = useState(customPreset)
   const [coefficients, setCoefficients] = useState<BiQuadCoefficients[]>(
@@ -84,6 +86,7 @@ function App() {
           altered={altered}
           coefficients={coefficients} // prop-drilling them down to the MusicPlayer
           onPresetChange={handlePresetChange}
+          onPowerChange={setPowered}
         />
 
         <div className="shadow-sm shadow-black relative">
@@ -93,41 +96,51 @@ function App() {
             theme={theme}
             scale={scale}
           >
-            {filters.map((filter, index) => (
+            {powered ? (
               <>
-                <FilterGradient
-                  fill
-                  key={index}
-                  index={index}
-                  filter={filter}
-                  id={`filter-${index}`}
-                />
+                {filters.map((filter, index) => (
+                  <>
+                    <FilterGradient
+                      fill
+                      key={index}
+                      index={index}
+                      filter={filter}
+                      id={`filter-${index}`}
+                    />
 
-                <FilterCurve
-                  showPin
-                  key={index}
-                  index={index}
-                  filter={filter}
-                  active={activeIndex === index}
-                  gradientId={`filter-${index}`}
-                />
+                    <FilterCurve
+                      showPin
+                      key={index}
+                      index={index}
+                      filter={filter}
+                      active={activeIndex === index}
+                      gradientId={`filter-${index}`}
+                    />
+                  </>
+                ))}
+                <CompositeCurve filters={filters} />
+                {filters.map((filter, index) => (
+                  <FilterPoint
+                    key={index}
+                    index={index}
+                    filter={filter}
+                    // label={getLabel(index)}
+                    active={activeIndex === index}
+                    onDrag={setDragging}
+                    onEnter={handleMouseEnter}
+                    onLeave={handleMouseLeave}
+                    onChange={handleFilterChange}
+                  />
+                ))}
+                {!dragging && <PointerTracker />}
               </>
-            ))}
-            <CompositeCurve filters={filters} />
-            {filters.map((filter, index) => (
-              <FilterPoint
-                key={index}
-                index={index}
-                filter={filter}
-                // label={getLabel(index)}
-                active={activeIndex === index}
-                onDrag={setDragging}
-                onEnter={handleMouseEnter}
-                onLeave={handleMouseLeave}
-                onChange={handleFilterChange}
+            ) : (
+              <FrequencyResponseCurve
+                dotted
+                magnitudes={[]}
+                color={tailwindColors.slate[500]}
               />
-            ))}
-            {!dragging && <PointerTracker />}
+            )}
           </FrequencyResponseGraph>
           <div className={styles.glareOverlay}></div>
         </div>
@@ -138,6 +151,7 @@ function App() {
               index={index}
               filter={filter}
               active={activeIndex === index}
+              disabled={!powered}
               onLeave={handleMouseLeave}
               onEnter={handleMouseEnter}
               onChange={handleFilterChange}

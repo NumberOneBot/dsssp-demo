@@ -7,6 +7,7 @@ const FilterInput = ({
   prefix,
   suffix,
   label,
+  disabled,
   precision = 1
 }: {
   value: number
@@ -14,6 +15,7 @@ const FilterInput = ({
   prefix?: string
   suffix?: string
   label?: string
+  disabled?: boolean
   precision?: number
 }) => {
   const [inputValue, setInputValue] = useState<string>(value.toFixed(precision))
@@ -48,7 +50,11 @@ const FilterInput = ({
   }, [value])
 
   return (
-    <div className="flex flex-col">
+    <div
+      className={clsx('flex flex-col transition-opacity duration-150', {
+        'opacity-50 pointer-events-none': disabled
+      })}
+    >
       {label && (
         <label className="mb-1 text-sm font-semibold text-zinc-500 drop-shadow-lg">
           {label}
@@ -57,7 +63,7 @@ const FilterInput = ({
       <div className="relative">
         <input
           type="text"
-          value={inputValue}
+          value={disabled ? '' : inputValue}
           onFocus={handleFocus}
           onChange={handleChange}
           onKeyUp={handleKeyUp}
