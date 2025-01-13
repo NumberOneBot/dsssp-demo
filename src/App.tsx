@@ -101,7 +101,7 @@ function App() {
                 {filters.map((filter, index) => (
                   <>
                     <FilterGradient
-                      fill
+                      fill={true}
                       key={index}
                       index={index}
                       filter={filter}
@@ -142,6 +142,7 @@ function App() {
               />
             )}
           </FrequencyResponseGraph>
+
           <div className={styles.glareOverlay}></div>
         </div>
 
@@ -150,8 +151,8 @@ function App() {
             <FilterCard
               index={index}
               filter={filter}
-              active={activeIndex === index}
               disabled={!powered}
+              active={activeIndex === index}
               onLeave={handleMouseLeave}
               onEnter={handleMouseEnter}
               onChange={handleFilterChange}
