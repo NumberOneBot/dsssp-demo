@@ -7,7 +7,7 @@ import presets from '../configs/presets'
 import type { GraphFilter } from 'dsssp'
 
 export const buttonClasses =
-  'px-2 py-1 m-[-1px] text-sm bg-black border border-zinc-800 rounded-sm hover:bg-zinc-950 hover:text-zinc-300 focus-visible:z-10 focus:outline-none focus-visible:border-sky-500 active:border-zinc-500 active:z-10'
+  'px-2 py-1 m-[-1px] text-sm bg-black border border-zinc-800 rounded-sm hover:bg-zinc-950 focus-visible:z-10 focus:outline-none focus-visible:border-sky-500 active:border-zinc-500 active:z-10'
 
 const PresetControl = ({
   powered,
@@ -53,7 +53,7 @@ const PresetControl = ({
         </div>
 
         <button
-          className={buttonClasses}
+          className={clsx(buttonClasses, 'hover:text-zinc-200')}
           onClick={handlePrevClick}
           aria-label="Previous preset"
         >
@@ -61,7 +61,7 @@ const PresetControl = ({
         </button>
 
         <button
-          className={buttonClasses}
+          className={clsx(buttonClasses, 'hover:text-zinc-200')}
           onClick={handleNextClick}
           aria-label="Next preset"
         >
