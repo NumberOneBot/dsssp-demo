@@ -42,17 +42,12 @@ const Header = ({
             'text-red-700 hover:text-red-500 ': !powered
           })}
           style={{
-            background: `radial-gradient(circle, ${glowColor}30 0%, ${glowColor}30 25%, transparent 70%)`
+            background: `radial-gradient(circle, ${glowColor}20 0%, ${glowColor}18 30%, transparent 70%)`
           }}
           onClick={togglePower}
           aria-label="Power"
         >
-          <PowerIcon
-            className="w-3.5 h-3.5"
-            style={{
-              filter: `drop-shadow(0 0 8px #FF0000)`
-            }}
-          />
+          <PowerIcon className="w-3.5 h-3.5" />
         </button>
 
         <PresetControls
