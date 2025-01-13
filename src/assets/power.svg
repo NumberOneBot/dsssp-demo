@@ -1,0 +1,25 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+>
+  <circle
+    cx="12"
+    cy="12"
+    r="10"
+    stroke="currentColor"
+    stroke-width="2"
+    fill="none"
+    stroke-dasharray="42.3 10"
+    stroke-dashoffset="0"
+  />
+  <line
+    x1="12"
+    y1="0"
+    x2="12"
+    y2="10"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+  />
+</svg>

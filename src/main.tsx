@@ -6,11 +6,7 @@ import './main.css'
 import { ErrorBoundary } from 'react-error-boundary'
 
 function fallbackRender({ error }: { error: Error }) {
-  return (
-    <div style={{ padding: '10px' }}>
-      <pre style={{ color: 'red' }}>{error.message}</pre>
-    </div>
-  )
+  return <pre style={{ padding: '10px', color: 'red' }}>{error.message}</pre>
 }
 
 createRoot(document.getElementById('root')!).render(

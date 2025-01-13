@@ -14,7 +14,7 @@ import {
 } from 'dsssp'
 import tailwindColors from 'tailwindcss/colors'
 
-import { AppHeaderBar, FilterCard } from './components'
+import { Header, FilterCard } from './components'
 
 import { customPreset } from './configs/presets'
 import theme from './configs/theme'
@@ -82,7 +82,7 @@ function App() {
   return (
     <div className="text-white text-sans min-h-screen flex flex-col items-center">
       <div className="max-w-[840px] pt-1 flex flex-col gap-1">
-        <AppHeaderBar
+        <Header
           altered={altered}
           coefficients={coefficients} // prop-drilling them down to the MusicPlayer
           onPresetChange={handlePresetChange}

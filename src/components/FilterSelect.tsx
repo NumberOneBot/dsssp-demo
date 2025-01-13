@@ -9,6 +9,8 @@ import {
 } from 'dsssp'
 import 'dsssp/font'
 
+import SelectArrowIcon from '../assets/select-arrow.svg?react'
+
 const FilterSelect = ({
   color,
   filter,
@@ -32,7 +34,7 @@ const FilterSelect = ({
         Type
       </div>
 
-      <div className="relative py-1 text-zinc-500 hover:text-zinc-300 ">
+      <div className="relative py-1 select-none text-zinc-500 hover:text-zinc-300 ">
         <select
           value={filter.type}
           onBlur={() => setOpened(false)}
@@ -61,19 +63,7 @@ const FilterSelect = ({
             { 'text-sky-500': opened }
           )}
         >
-          <svg
-            className="w-3 h-3"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+          <SelectArrowIcon className="w-3 h-3" />
         </div>
         <div className="p-1 absolute -top-1 left-1/2 -translate-x-1/2 pointer-events-none">
           <div
