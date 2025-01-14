@@ -1,4 +1,4 @@
-import { TailwindColorKey, generateTwPalette } from './utils'
+import { type TailwindColorKey, generateTwPalette } from './utils'
 
 const rainbow1: TailwindColorKey[] = [
   'rose',

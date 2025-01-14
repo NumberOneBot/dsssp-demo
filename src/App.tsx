@@ -149,6 +149,7 @@ function App() {
         <div className="flex gap-1 w-full pb-1">
           {filters.map((filter, index) => (
             <FilterCard
+              key={index}
               index={index}
               filter={filter}
               disabled={!powered}

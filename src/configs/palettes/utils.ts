@@ -1,4 +1,4 @@
-import { GraphThemeFilterColors } from 'dsssp'
+import { type GraphThemeFilterColors } from 'dsssp'
 import tailwindColors from 'tailwindcss/colors'
 
 export type TailwindColorKey = keyof typeof tailwindColors

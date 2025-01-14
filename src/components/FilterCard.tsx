@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FilterChangeEvent, type GraphFilter } from 'dsssp'
+import { type FilterChangeEvent, type GraphFilter } from 'dsssp'
 import tailwindColors from 'tailwindcss/colors'
 import clsx from 'clsx'
 
@@ -22,12 +22,10 @@ export const generateNoise = (
     const alpha = Math.round(opacity * 255)
 
     for (let i = 0; i < buffer32.length; i++) {
+      // eslint-disable-next-line no-bitwise
       const color = (Math.random() * 255) | 0
-      buffer32[i] =
-        (alpha << 24) | // Альфа
-        (color << 16) | // Красный
-        (color << 8) | // Зеленый
-        color // Синий
+      // eslint-disable-next-line no-bitwise
+      buffer32[i] = (alpha << 24) | (color << 16) | (color << 8) | color
     }
     ctx.putImageData(imageData, 0, 0)
     return canvas.toDataURL()
@@ -53,6 +51,7 @@ const FilterCard = ({
   onChange: (event: FilterChangeEvent) => void
 }) => {
   const [noiseDataUrl, setNoiseDataUrl] = useState<string>('')
+  // eslint-disable-next-line no-param-reassign
   if (disabled) filter = { type: 'BYPASS', freq: 0, gain: 0, q: 1 }
 
   useEffect(() => {
