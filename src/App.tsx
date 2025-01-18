@@ -23,17 +23,16 @@ import scale from './configs/scale'
 import styles from './App.module.css'
 
 function App() {
-  const calcVars = (filters: GraphFilter[]) =>
+  const calcPresetCoefficients = (filters: GraphFilter[]) =>
     filters.map((filter) => {
       return calcFilterCoefficients(filter, scale.sampleRate)
     })
-  const customPresetCoefficients = calcVars(customPreset)
 
   const [powered, setPowered] = useState(true)
   const [altered, setAltered] = useState(false)
   const [filters, setFilters] = useState(customPreset)
   const [coefficients, setCoefficients] = useState<BiQuadCoefficients[]>(
-    customPresetCoefficients
+    calcPresetCoefficients(customPreset)
   )
 
   const [dragging, setDragging] = useState(false)
@@ -73,10 +72,10 @@ function App() {
     if (!dragging) setActiveIndex(index)
   }
 
-  const handlePresetChange = (newFilters: GraphFilter[]) => {
+  const handlePresetChange = (preset: GraphFilter[]) => {
     setAltered(false)
-    setFilters(newFilters)
-    setCoefficients(calcVars(newFilters))
+    setFilters(preset)
+    setCoefficients(calcPresetCoefficients(preset))
   }
 
   return (

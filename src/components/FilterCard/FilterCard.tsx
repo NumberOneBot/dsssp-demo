@@ -4,7 +4,7 @@ import tailwindColors from 'tailwindcss/colors'
 import clsx from 'clsx'
 
 import { FilterInput, FilterSelect, SliderInput } from '.'
-import filterColors from '../configs/colors'
+import filterColors from '../../configs/colors'
 
 export const generateNoise = (
   width: number = 200,

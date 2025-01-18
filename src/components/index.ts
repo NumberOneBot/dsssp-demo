@@ -1,7 +1,2 @@
-export { default as FilterInput } from './FilterInput'
-export { default as SliderInput } from './SliderInput'
 export { default as FilterCard } from './FilterCard'
-export { default as FilterSelect } from './FilterSelect'
 export { default as Header } from './Header'
-export { default as MusicPlayer } from './MusicPlayer'
-export { default as PresetControls } from './PresetControls'

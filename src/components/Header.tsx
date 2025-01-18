@@ -4,8 +4,8 @@ import clsx from 'clsx'
 import tailwindColors from 'tailwindcss/colors'
 
 import PowerIcon from '../assets/power.svg?react'
-import { MusicPlayer } from '.'
-import PresetControls, { buttonClasses } from './PresetControls'
+import MusicPlayer from './MusicPlayer'
+import Presets, { buttonClasses } from './Presets'
 
 const Header = ({
   altered = false,
@@ -50,7 +50,7 @@ const Header = ({
           <PowerIcon className="w-3.5 h-3.5" />
         </button>
 
-        <PresetControls
+        <Presets
           powered={powered}
           altered={altered}
           onPresetChange={onPresetChange}

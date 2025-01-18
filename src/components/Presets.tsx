@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import clsx from 'clsx'
+import { type GraphFilter } from 'dsssp'
 
 import LeftArrowIcon from '../assets/left-arrow.svg?react'
 import RightArrowIcon from '../assets/right-arrow.svg?react'
 import presets from '../configs/presets'
-import type { GraphFilter } from 'dsssp'
 
 export const buttonClasses =
   'px-2 py-1 m-[-1px] text-sm bg-black border border-zinc-800 rounded-sm hover:bg-zinc-950 focus-visible:z-10 focus:outline-none focus-visible:border-sky-500 active:border-zinc-500 active:z-10'

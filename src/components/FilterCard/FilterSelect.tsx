@@ -9,7 +9,7 @@ import {
 } from 'dsssp'
 import 'dsssp/font'
 
-import SelectArrowIcon from '../assets/select-arrow.svg?react'
+import SelectArrowIcon from '../../assets/select-arrow.svg?react'
 
 const FilterSelect = ({
   color,
