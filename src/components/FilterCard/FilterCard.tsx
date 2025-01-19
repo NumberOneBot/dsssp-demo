@@ -14,7 +14,6 @@ import filterColors from '../../configs/colors'
 import { FilterInput, FilterSelect, SliderInput } from '.'
 import { generateNoise } from './utils'
 
-
 const FilterCard = ({
   index = -1,
   active,
@@ -35,12 +34,18 @@ const FilterCard = ({
   const [noiseDataUrl, setNoiseDataUrl] = useState<string>('')
   // eslint-disable-next-line no-param-reassign
   if (disabled) filter = { type: 'BYPASS', freq: 0, gain: 0, q: 1 }
-
   const { type } = filter
 
   const zeroFreq = useMemo(() => getZeroFreq(type), [type])
   const zeroGain = useMemo(() => getZeroGain(type), [type])
   const zeroQ = useMemo(() => getZeroQ(type), [type])
+
+  console.log('Filter type', type,
+    'type === BYPASS', ['BYPASS'].includes(type),
+    'getZeroFreq(type)', getZeroFreq(type),
+    'getZeroGain(type)', getZeroGain(type),
+    'getZeroQ(type)', getZeroQ(type)
+  )
 
   const color =
     type === 'BYPASS'

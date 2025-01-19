@@ -6,7 +6,7 @@ import App from './App.tsx'
 import './main.css'
 
 function fallbackRender({ error }: { error: Error }) {
-  return <pre style={{ padding: '12px', color: 'red' }}>{error.message}</pre>
+  return <pre style={{ padding: '8px', color: 'red' }}>{error.message}</pre>
 }
 
 createRoot(document.getElementById('root')!).render(

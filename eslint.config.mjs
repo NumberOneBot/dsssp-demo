@@ -58,8 +58,7 @@ export default [
             ['builtin', 'external'],
             'internal',
             'parent',
-            ['sibling', 'index'],
-            'object'
+            ['sibling', 'index']
           ],
           'newlines-between': 'always',
           alphabetize: {
