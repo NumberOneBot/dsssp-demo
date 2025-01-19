@@ -1,38 +1,20 @@
-import { useEffect, useState } from 'react'
-import { type FilterChangeEvent, type GraphFilter } from 'dsssp'
-import tailwindColors from 'tailwindcss/colors'
 import clsx from 'clsx'
+import {
+  getZeroFreq,
+  getZeroGain,
+  getZeroQ,
+  type FilterChangeEvent,
+  type GraphFilter
+} from 'dsssp'
+import { useEffect, useMemo, useState } from 'react'
+import tailwindColors from 'tailwindcss/colors'
 
-import { FilterInput, FilterSelect, SliderInput } from '.'
 import filterColors from '../../configs/colors'
 
-export const generateNoise = (
-  width: number = 200,
-  height: number = 200,
-  opacity: number = 0.05
-): string => {
-  const canvas = document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
-  const ctx = canvas.getContext('2d')
+import { FilterInput, FilterSelect, SliderInput } from '.'
+import { generateNoise } from './utils'
 
-  if (ctx) {
-    const imageData = ctx.createImageData(width, height)
-    const buffer32 = new Uint32Array(imageData.data.buffer)
-    const alpha = Math.round(opacity * 255)
 
-    for (let i = 0; i < buffer32.length; i++) {
-      // eslint-disable-next-line no-bitwise
-      const color = (Math.random() * 255) | 0
-      // eslint-disable-next-line no-bitwise
-      buffer32[i] = (alpha << 24) | (color << 16) | (color << 8) | color
-    }
-    ctx.putImageData(imageData, 0, 0)
-    return canvas.toDataURL()
-  }
-
-  return ''
-}
 const FilterCard = ({
   index = -1,
   active,
@@ -54,15 +36,21 @@ const FilterCard = ({
   // eslint-disable-next-line no-param-reassign
   if (disabled) filter = { type: 'BYPASS', freq: 0, gain: 0, q: 1 }
 
+  const { type } = filter
+
+  const zeroFreq = useMemo(() => getZeroFreq(type), [type])
+  const zeroGain = useMemo(() => getZeroGain(type), [type])
+  const zeroQ = useMemo(() => getZeroQ(type), [type])
+
+  const color =
+    type === 'BYPASS'
+      ? tailwindColors.slate[400]
+      : filterColors[index].active || '#FFFFFF'
+
   useEffect(() => {
     const noise = generateNoise(50, 50, 0.1)
     setNoiseDataUrl(noise)
   }, [])
-
-  const color =
-    filter.type === 'BYPASS'
-      ? tailwindColors.slate[400]
-      : filterColors[index].active || '#FFFFFF'
 
   return (
     <div
@@ -90,7 +78,7 @@ const FilterCard = ({
         precision={0}
         label="Frequency"
         value={filter.freq}
-        disabled={disabled}
+        disabled={disabled || zeroFreq}
         onChange={(freq) => onChange({ ...filter, index, freq, ended: true })}
       />
 
@@ -101,7 +89,7 @@ const FilterCard = ({
           step={0.1}
           label="Gain"
           value={filter.gain}
-          disabled={disabled}
+          disabled={disabled || zeroGain}
           onChange={(gain, ended) =>
             onChange({ ...filter, index, gain, ended })
           }
@@ -114,7 +102,7 @@ const FilterCard = ({
           step={0.1}
           label="Q"
           value={filter.q}
-          disabled={disabled}
+          disabled={disabled || zeroQ}
           onChange={(q, ended) => onChange({ ...filter, index, q, ended })}
         />
       </div>

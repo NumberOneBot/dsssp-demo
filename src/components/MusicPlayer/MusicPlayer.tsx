@@ -1,9 +1,10 @@
-import { useEffect, useState, useRef, useCallback } from 'react'
-import { type BiQuadCoefficients } from 'dsssp'
 import clsx from 'clsx'
+import { type BiQuadCoefficients } from 'dsssp'
+import { useEffect, useState, useRef, useCallback } from 'react'
+
+import { tracks } from '../../configs/tracks'
 
 import { AudioController, TrackInfo, Visualizer, PlaybackButtons } from '.'
-import { tracks } from '../../configs/tracks'
 
 const MusicPlayer = ({
   powered = true,

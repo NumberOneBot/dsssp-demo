@@ -1,6 +1,6 @@
-import { useState } from 'react'
 import clsx from 'clsx'
 import { type GraphFilter } from 'dsssp'
+import { useState } from 'react'
 
 import LeftArrowIcon from '../assets/left-arrow.svg?react'
 import RightArrowIcon from '../assets/right-arrow.svg?react'

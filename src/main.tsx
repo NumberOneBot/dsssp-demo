@@ -1,9 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { ErrorBoundary } from 'react-error-boundary'
+
 import App from './App.tsx'
 import './main.css'
-
-import { ErrorBoundary } from 'react-error-boundary'
 
 function fallbackRender({ error }: { error: Error }) {
   return <pre style={{ padding: '12px', color: 'red' }}>{error.message}</pre>

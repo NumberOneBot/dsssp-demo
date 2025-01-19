@@ -1,8 +1,10 @@
-import type React from 'react'
 import clsx from 'clsx'
+import type React from 'react'
+
+import { tracks } from '../../configs/tracks'
 
 import { CoversStack } from '.'
-import { tracks } from '../../configs/tracks'
+
 
 export interface TrackInfoProps {
   activeIndex: number

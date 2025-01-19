@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import clsx from 'clsx'
 import {
   FilterIcon,
@@ -7,6 +6,7 @@ import {
   type FilterType,
   type GraphFilter
 } from 'dsssp'
+import { useState } from 'react'
 import 'dsssp/font'
 
 import SelectArrowIcon from '../../assets/select-arrow.svg?react'

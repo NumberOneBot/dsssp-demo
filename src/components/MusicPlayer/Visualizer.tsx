@@ -1,5 +1,5 @@
-import type React from 'react';
 import { useRef, useEffect } from 'react'
+import type React from 'react';
 
 interface VisualizerProps {
   analyser: AnalyserNode | null

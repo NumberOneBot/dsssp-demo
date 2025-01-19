@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { type BiQuadCoefficients, type GraphFilter } from 'dsssp'
 import clsx from 'clsx'
+import { type BiQuadCoefficients, type GraphFilter } from 'dsssp'
+import { useState } from 'react'
 import tailwindColors from 'tailwindcss/colors'
 
 import PowerIcon from '../assets/power.svg?react'
+
 import MusicPlayer from './MusicPlayer'
 import Presets, { buttonClasses } from './Presets'
 

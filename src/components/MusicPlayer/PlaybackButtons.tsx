@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 
-import PlayIcon from '../../assets/play.svg?react'
 import PauseIcon from '../../assets/pause.svg?react'
+import PlayIcon from '../../assets/play.svg?react'
 import StopIcon from '../../assets/stop.svg?react'
 
 export const PlaybackButtons = ({

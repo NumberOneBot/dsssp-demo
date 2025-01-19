@@ -1,8 +1,10 @@
+import clsx from 'clsx'
 import { useRef } from 'react'
+import tailwindColors from 'tailwindcss/colors'
+
 import { FilterInput } from '.'
 import styles from './SliderInput.module.css'
-import tailwindColors from 'tailwindcss/colors'
-import clsx from 'clsx'
+
 
 const SliderInput = ({
   value,

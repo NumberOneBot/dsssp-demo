@@ -1,11 +1,12 @@
 import { fixupConfigRules } from '@eslint/compat'
-import jestDom from 'eslint-plugin-jest-dom'
-import globals from 'globals'
+import { FlatCompat } from '@eslint/eslintrc'
+import js from '@eslint/js'
 import tsParser from '@typescript-eslint/parser'
+import importPlugin from 'eslint-plugin-import'
+import jestDomPlugin from 'eslint-plugin-jest-dom'
+import globals from 'globals'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import js from '@eslint/js'
-import { FlatCompat } from '@eslint/eslintrc'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -31,7 +32,8 @@ export default [
   ),
   {
     plugins: {
-      'jest-dom': jestDom
+      'jest-dom': jestDomPlugin,
+      import: importPlugin
     },
 
     languageOptions: {
@@ -49,6 +51,23 @@ export default [
     },
 
     rules: {
+      'import/order': [
+        'error',
+        {
+          groups: [
+            ['builtin', 'external'],
+            'internal',
+            'parent',
+            ['sibling', 'index'],
+            'object'
+          ],
+          'newlines-between': 'always',
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true
+          }
+        }
+      ],
       quotes: [
         'error',
         'single',

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   FrequencyResponseGraph,
   CompositeCurve,
@@ -12,15 +11,15 @@ import {
   calcFilterCoefficients,
   FrequencyResponseCurve
 } from 'dsssp'
+import { useState } from 'react'
 import tailwindColors from 'tailwindcss/colors'
 
-import { Header, FilterCard } from './components'
-
-import { customPreset } from './configs/presets'
-import theme from './configs/theme'
-import scale from './configs/scale'
-
 import styles from './App.module.css'
+import { Header, FilterCard } from './components'
+import { customPreset } from './configs/presets'
+import scale from './configs/scale'
+import theme from './configs/theme'
+
 
 function App() {
   const calcPresetCoefficients = (filters: GraphFilter[]) =>
