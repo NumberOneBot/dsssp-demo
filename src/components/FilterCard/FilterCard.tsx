@@ -40,13 +40,6 @@ const FilterCard = ({
   const zeroGain = useMemo(() => getZeroGain(type), [type])
   const zeroQ = useMemo(() => getZeroQ(type), [type])
 
-  console.log('Filter type', type,
-    'type === BYPASS', ['BYPASS'].includes(type),
-    'getZeroFreq(type)', getZeroFreq(type),
-    'getZeroGain(type)', getZeroGain(type),
-    'getZeroQ(type)', getZeroQ(type)
-  )
-
   const color =
     type === 'BYPASS'
       ? tailwindColors.slate[400]
