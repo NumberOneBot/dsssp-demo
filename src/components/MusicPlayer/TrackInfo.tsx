@@ -1,10 +1,9 @@
-import clsx from 'clsx'
 import type React from 'react'
 
+import Spinner from '../../assets/spinner.svg?react'
 import { tracks } from '../../configs/tracks'
 
 import { CoversStack } from '.'
-
 
 export interface TrackInfoProps {
   activeIndex: number
@@ -36,13 +35,17 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
         <div className="text-zinc-300 whitespace-nowrap">{artist}</div>
         <div className="text-zinc-600 whitespace-nowrap">{title}</div>
       </div>
-      <div
-        className={clsx('flex flex-col h-full items-end justify-center', {
-          'opacity-0 pointer-events-none': loading
-        })}
-      >
-        <div className="text-zinc-600 text-xs">{currentTime}</div>
-        <div className="text-zinc-600 text-xs">{duration}</div>
+      <div className="flex flex-col h-full items-end justify-center pointer-events-none">
+        {loading ? (
+          <div className="h-3 w-[22px] px-1 text-zinc-600">
+            <Spinner className="h-3 w-3" />
+          </div>
+        ) : (
+          <>
+            <div className="text-zinc-600 text-xs">{currentTime}</div>
+            <div className="text-zinc-600 text-xs">{duration}</div>
+          </>
+        )}
       </div>
     </div>
   )

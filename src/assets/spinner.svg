@@ -1,0 +1,35 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+  viewBox="22 22 44 44"
+>
+  <circle
+    cx="44"
+    cy="44"
+    r="20.2"
+    stroke="currentColor"
+    stroke-width="3.6"
+    fill="none"
+    stroke-dasharray="80, 200"
+    stroke-dashoffset="0"
+  >
+    <animate
+      attributeName="stroke-dasharray"
+      values="1, 200; 100, 200; 1, 200"
+      keyTimes="0; 0.5; 1"
+      keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+      calcMode="spline"
+      dur="1.4s"
+      repeatCount="indefinite"
+    />
+    <animate
+      attributeName="stroke-dashoffset"
+      values="0; -15; -126"
+      keyTimes="0; 0.5; 1"
+      keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+      calcMode="spline"
+      dur="1.4s"
+      repeatCount="indefinite"
+    />
+  </circle>
+</svg>
