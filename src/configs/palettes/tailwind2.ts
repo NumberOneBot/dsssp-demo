@@ -1,4 +1,4 @@
-import { type TailwindColorKey, generateTwPalette } from './utils'
+import { type TailwindColorKey, generateTailwindPalette } from './utils'
 
 const rainbow2: TailwindColorKey[] = [
   'red',
@@ -20,4 +20,4 @@ const rainbow2: TailwindColorKey[] = [
   'rose'
 ]
 
-export default generateTwPalette(rainbow2)
+export default generateTailwindPalette(rainbow2)

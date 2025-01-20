@@ -3,7 +3,7 @@ import tailwindColors from 'tailwindcss/colors'
 
 export type TailwindColorKey = keyof typeof tailwindColors
 
-export const generateTwPalette = (
+export const generateTailwindPalette = (
   colorKeys: TailwindColorKey[]
 ): GraphThemeFilterColors[] =>
   colorKeys.map((key) => {
