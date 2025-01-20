@@ -35,8 +35,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:github": "vite build --mode github",
+    "build:landing": "vite build --mode landing",
     "preview": "vite preview",
-    "deploy": "gh-pages -d dist",
+    "deploy:github": "gh-pages -d dist",
     "lint": "tsc && eslint .",
     "lint:fix": "eslint . --fix"
   },
