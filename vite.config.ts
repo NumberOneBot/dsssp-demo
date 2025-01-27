@@ -21,7 +21,8 @@ export default defineConfig(({ mode }) => {
     base: getBase(mode),
     server: {
       port: 3003,
-      open: true
+      open: true,
+      historyApiFallback: true
     },
     build: {
       sourcemap: true,

@@ -2,7 +2,7 @@
   "name": "dsssp-demo",
   "type": "module",
   "private": false,
-  "version": "0.3.2",
+  "version": "0.4.0",
   "author": "Oleksiy Strelets",
   "license": "AGPL-3.0-only",
   "homepage": "https://dsssp.io",
@@ -43,10 +43,11 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "dsssp": "^0.3.1",
+    "dsssp": "^0.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-error-boundary": "^5.0.0"
+    "react-error-boundary": "^5.0.0",
+    "react-router-dom": "^7.1.3"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",
