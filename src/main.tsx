@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ErrorBoundary } from 'react-error-boundary'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createHashRouter, RouterProvider } from 'react-router-dom'
 
 import App from './App.tsx'
 import Demo2 from './pages/Demo2'
@@ -14,7 +14,7 @@ function fallbackRender({ error }: { error: Error }) {
   return <pre style={{ padding: '8px', color: 'red' }}>{error.message}</pre>
 }
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: '/',
     element: <App />
