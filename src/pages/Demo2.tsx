@@ -27,10 +27,10 @@ const graphTheme: GraphThemeOverride = {
       lineWidth: { center: 1, border: 0 }
     },
     gradient: {
-      start: '#132632',
-      stop: '#020405'
+      start: '#060809',
+      stop: '#060809'
     },
-    label: { color: '#8a8d90' }
+    label: { color: '#8a8d90', fontSize: 8 }
   }
 }
 
@@ -38,10 +38,10 @@ const graphScale = {
   minGain: -12,
   maxGain: 12,
   minFreq: 10,
-  maxFreq: 10000,
+  maxFreq: 20000,
   dbSteps: 12,
   octaveTicks: 0,
-  octaveLabels: [10, 125, 1000, 5000]
+  octaveLabels: [10, 100, 1000, 5000]
 }
 
 const Demo2 = () => {
@@ -66,10 +66,10 @@ const Demo2 = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-black text-white">
-      <div className="w-[608px] flex flex-col gap-4 p-1">
+      <div className="w-[408px] flex flex-col gap-4 p-1">
         <FrequencyResponseGraph
-          width={600}
-          height={300}
+          width={400}
+          height={200}
           scale={graphScale}
           theme={graphTheme}
         >
@@ -94,7 +94,7 @@ const Demo2 = () => {
               key={index}
               index={index}
               filter={filter}
-              radius={7}
+              radius={3}
               color="#dadcde"
               dragColor="#ffffff"
               activeColor="#ffffff"
