@@ -38,6 +38,7 @@ const graphScale = {
   minGain: -12,
   maxGain: 12,
   minFreq: 10,
+  maxFreq: 10000,
   dbSteps: 12,
   octaveTicks: 0,
   octaveLabels: [10, 125, 1000, 5000]
