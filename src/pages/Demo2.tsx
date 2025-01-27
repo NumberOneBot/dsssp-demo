@@ -12,23 +12,23 @@ import { useState } from 'react'
 import NavBar from './components/NavBar'
 
 const preset: GraphFilter[] = [
-  { freq: 20, gain: -4, q: 0.7, type: 'PEAK' },
-  { freq: 100, gain: 3, q: 0.7, type: 'PEAK' },
-  { freq: 250, gain: -4, q: 0.7, type: 'PEAK' },
-  { freq: 1000, gain: 6, q: 0.7, type: 'PEAK' },
-  { freq: 5000, gain: -3, q: 0.7, type: 'PEAK' }
+  { freq: 16, gain: -4, q: 0.7, type: 'PEAK' },
+  { freq: 40, gain: 3, q: 0.7, type: 'PEAK' },
+  { freq: 350, gain: -3.5, q: 0.7, type: 'PEAK' },
+  { freq: 750, gain: 5.5, q: 0.7, type: 'PEAK' },
+  { freq: 4400, gain: 2, q: 0.7, type: 'PEAK' }
 ]
 
 const graphTheme: GraphThemeOverride = {
   background: {
     grid: {
       dotted: true,
-      lineColor: '#414141',
+      lineColor: '#8a8d90',
       lineWidth: { center: 1, border: 0 }
     },
     gradient: {
       start: '#132632',
-      stop: '#090909'
+      stop: '#020405'
     },
     label: { color: '#8a8d90' }
   }
@@ -56,9 +56,17 @@ const Demo2 = () => {
       return newFilters
     })
   }
+
+  const glowFilter = {
+    filter: `
+      drop-shadow(0 0 1px #b7cbe7)
+      drop-shadow(0 0 2px #b7cbe7)
+    `
+  }
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-black text-white">
-      <div className="w-[600px] flex flex-col gap-4">
+      <div className="w-[608px] flex flex-col gap-4 p-1">
         <FrequencyResponseGraph
           width={600}
           height={300}
@@ -66,22 +74,27 @@ const Demo2 = () => {
           theme={graphTheme}
         >
           <FilterGradient
-            id="composite-curve"
-            color="#b7cbe7"
-            opacity={0.25}
             fill
+            opacity={0.1}
+            color="#b7cbe7"
+            id="composite-curve"
           />
           <CompositeCurve
-            filters={filters}
             color="#b7cbe7"
+            filters={filters}
             gradientId="composite-curve"
+          />
+          <CompositeCurve
+            color="#b7cbe7"
+            filters={filters}
+            style={glowFilter}
           />
           {filters.map((filter, index) => (
             <FilterPoint
               key={index}
               index={index}
               filter={filter}
-              radius={5}
+              radius={7}
               color="#dadcde"
               dragColor="#ffffff"
               activeColor="#ffffff"
