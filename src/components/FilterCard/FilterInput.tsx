@@ -1,9 +1,11 @@
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import type React from 'react';
+import type React from 'react'
 
 const FilterInput = ({
   value,
+  min = -Infinity,
+  max = Infinity,
   onChange,
   prefix,
   suffix,
@@ -12,6 +14,8 @@ const FilterInput = ({
   precision = 1
 }: {
   value: number
+  min?: number
+  max?: number
   onChange?: (value: number) => void
   prefix?: string
   suffix?: string
@@ -25,25 +29,27 @@ const FilterInput = ({
     setInputValue(e.target.value)
   }
 
-  const handleBlur = () => {
+  const validateInput = () => {
     const num = Number(inputValue)
     if (!isNaN(num)) {
-      onChange?.(num)
-    } else {
-      setInputValue(value.toFixed(precision))
+      const sanitized = Math.min(Math.max(Number(num), min), max)
+      setInputValue(sanitized.toFixed(precision))
+      onChange?.(sanitized)
     }
   }
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.select()
+
+  const handleBlur = () => {
+    validateInput()
   }
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      const num = Number(inputValue)
-      if (!isNaN(num)) {
-        onChange?.(num)
-      }
+      validateInput()
     }
+  }
+
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select()
   }
 
   useEffect(() => {
@@ -63,14 +69,17 @@ const FilterInput = ({
       )}
       <div className="relative">
         <input
-          type="text"
+          type="number"
+          min={min}
+          max={max}
+          step={precision === 0 ? 1 : 0.1}
           value={disabled ? '' : inputValue}
           onFocus={handleFocus}
           onChange={handleChange}
           onKeyUp={handleKeyUp}
           onBlur={handleBlur}
           className={clsx(
-            'appearance-none block w-full text-center shadow-md bg-zinc-950 text-white border border-zinc-700 rounded-sm py-0.5 focus:outline-none focus:ring-sky-500 focus:border-sky-500',
+            'appearance-none [&::-webkit-inner-spin-button]:appearance-none block w-full text-center shadow-md bg-zinc-950 text-white border border-zinc-700 rounded-sm py-0.5 focus:outline-none focus:ring-sky-500 focus:border-sky-500',
             { 'pl-10': prefix },
             { 'pr-8': suffix }
           )}

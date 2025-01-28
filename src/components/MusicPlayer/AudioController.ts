@@ -313,13 +313,13 @@ export class AudioController {
     this.startTime = this.audioContext.currentTime
     this.updatePosition(true)
 
-    await this.fadeGainTo(1, 0.3)
+    await this.fadeGainTo(1, 0.2)
   }
 
   async pause(): Promise<void> {
     if (!this.audioContext || !this.sourceNode || this.startTime == null) return
 
-    await this.fadeGainTo(0, 0.15)
+    await this.fadeGainTo(0, 0.1)
 
     const elapsed = this.audioContext.currentTime - this.startTime
     this.pausedAt += elapsed

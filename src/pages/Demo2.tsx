@@ -27,8 +27,8 @@ const graphTheme: GraphThemeOverride = {
       lineWidth: { center: 1, border: 0 }
     },
     gradient: {
-      start: '#060809',
-      stop: '#060809'
+      start: '#0b0e0f',
+      stop: '#090a0b'
     },
     label: { color: '#8a8d90', fontSize: 8 }
   }

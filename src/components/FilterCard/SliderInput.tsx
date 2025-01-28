@@ -5,7 +5,6 @@ import tailwindColors from 'tailwindcss/colors'
 import { FilterInput } from '.'
 import styles from './SliderInput.module.css'
 
-
 const SliderInput = ({
   value,
   onChange,
@@ -138,6 +137,8 @@ const SliderInput = ({
       <div className="pt-1">
         <FilterInput
           value={value}
+          min={log ? 0 : min}
+          max={log ? 100 : max}
           precision={2}
           disabled={disabled}
           onChange={(value) => onChange(value, true)}

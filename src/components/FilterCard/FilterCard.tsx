@@ -10,6 +10,7 @@ import { useEffect, useMemo, useState } from 'react'
 import tailwindColors from 'tailwindcss/colors'
 
 import filterColors from '../../configs/colors'
+import scale from '../../configs/scale'
 
 import { FilterInput, FilterSelect, SliderInput } from '.'
 import { generateNoise } from './utils'
@@ -31,6 +32,7 @@ const FilterCard = ({
   onEnter?: (event: FilterChangeEvent) => void
   onChange: (event: FilterChangeEvent) => void
 }) => {
+  const { minFreq, maxFreq } = scale
   const [noiseDataUrl, setNoiseDataUrl] = useState<string>('')
   // eslint-disable-next-line no-param-reassign
   if (disabled) filter = { type: 'BYPASS', freq: 0, gain: 0, q: 1 }
@@ -73,6 +75,8 @@ const FilterCard = ({
 
       <FilterInput
         suffix="Hz"
+        min={minFreq}
+        max={maxFreq}
         precision={0}
         label="Frequency"
         value={filter.freq}
