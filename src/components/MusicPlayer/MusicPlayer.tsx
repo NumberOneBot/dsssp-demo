@@ -23,6 +23,8 @@ const MusicPlayer = ({
     right: AnalyserNode
   } | null>(null)
 
+  const emptyDuration = duration === '0:00'
+
   const audioController = useRef<AudioController | null>(null)
 
   const handleStop = () => {
@@ -93,11 +95,15 @@ const MusicPlayer = ({
         activeIndex={activeTrack}
         currentTime={currentTime}
         duration={duration}
-        loading={loading}
+        loading={loading || emptyDuration}
         onChangeTrack={handleChangeTrack}
       />
 
-      <div className={clsx({ 'pointer-events-none': loading })}>
+      <div
+        className={clsx('transition-opacity duration-150', {
+          'pointer-events-none opacity-50': loading || emptyDuration
+        })}
+      >
         <PlaybackButtons
           playing={playing}
           onStop={handleStop}

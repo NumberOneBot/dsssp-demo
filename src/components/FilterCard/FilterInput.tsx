@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type React from 'react'
 
 const FilterInput = ({
@@ -23,6 +23,7 @@ const FilterInput = ({
   disabled?: boolean
   precision?: number
 }) => {
+  const oldValue = useRef<number>(value)
   const [inputValue, setInputValue] = useState<string>(value.toFixed(precision))
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,8 +34,11 @@ const FilterInput = ({
     const num = Number(inputValue)
     if (!isNaN(num)) {
       const sanitized = Math.min(Math.max(Number(num), min), max)
-      setInputValue(sanitized.toFixed(precision))
-      onChange?.(sanitized)
+      if (sanitized !== oldValue.current) {
+        setInputValue(sanitized.toFixed(precision))
+        onChange?.(sanitized)
+        oldValue.current = sanitized
+      }
     }
   }
 
@@ -48,6 +52,7 @@ const FilterInput = ({
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select()
+    oldValue.current = Number(inputValue)
   }
 
   useEffect(() => {

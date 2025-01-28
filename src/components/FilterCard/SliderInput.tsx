@@ -29,6 +29,7 @@ const SliderInput = ({
   disabled?: boolean
 }) => {
   const dragging = useRef(false)
+  const oldValue = useRef(value)
 
   const linearToLog = (linear: number): number => {
     const minv = Math.log(min)
@@ -52,25 +53,32 @@ const SliderInput = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = getNewValue(e)
-    if (value !== newValue) onChange(newValue, false)
+    onChange(newValue, false)
   }
 
   const handleMouseUp = (e: React.MouseEvent<HTMLInputElement>) => {
     if (!dragging.current) return
     dragging.current = false
     const newValue = getNewValue(e)
-    if (value !== newValue) onChange(newValue, true)
+    if (oldValue.current !== newValue) onChange(newValue, true)
   }
 
   const handleTouchEnd = (e: React.TouchEvent<HTMLInputElement>) => {
     if (!dragging.current) return
     dragging.current = false
     const newValue = getNewValue(e)
-    if (value !== newValue) onChange(newValue, true)
+    if (oldValue.current !== newValue) onChange(newValue, true)
   }
 
-  const handleMouseDown = () => (dragging.current = true)
-  const handleTouchStart = () => (dragging.current = true)
+  const handleMouseDown = () => {
+    dragging.current = true
+    oldValue.current = value
+  }
+
+  const handleTouchStart = () => {
+    dragging.current = true
+    oldValue.current = value
+  }
 
   const sliderValue = log ? logToLinear(value).toFixed(precision) : value
 
