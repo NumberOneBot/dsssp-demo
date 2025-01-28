@@ -6,10 +6,19 @@ import {
   type FilterType,
   type GraphFilter
 } from 'dsssp'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import 'dsssp/font'
 
 import SelectArrowIcon from '../../assets/select-arrow.svg?react'
+
+const isSafari = () => {
+  const ua = navigator.userAgent
+  return (
+    !ua.includes('Chrome') &&
+    !ua.includes('Chromium') &&
+    (ua.includes('Safari') || /iPad|iPhone|iPod/.test(ua))
+  )
+}
 
 const FilterSelect = ({
   color,
@@ -23,6 +32,8 @@ const FilterSelect = ({
   onChange: (type: FilterType) => void
 }) => {
   const [opened, setOpened] = useState<boolean>(false)
+  // temporary solution to hide broken dsssp icons from dropdowns
+  const safariBrowser = useMemo(() => isSafari(), [])
 
   return (
     <div
@@ -52,7 +63,7 @@ const FilterSelect = ({
               value={type}
               className="bg-zinc-950 text-white text-sm font-[dsssp,sans-serif]"
               dangerouslySetInnerHTML={{
-                __html: `&nbsp;${getIconSymbol(type)} ${type}&nbsp;`
+                __html: `&nbsp;${safariBrowser ? '' : getIconSymbol(type)} ${type}&nbsp;`
               }}
             ></option>
           ))}

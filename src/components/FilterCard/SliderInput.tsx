@@ -5,6 +5,8 @@ import tailwindColors from 'tailwindcss/colors'
 import { FilterInput } from '.'
 import styles from './SliderInput.module.css'
 
+const precision = 2
+
 const SliderInput = ({
   value,
   onChange,
@@ -42,28 +44,35 @@ const SliderInput = ({
     return (Math.log(log) - minv) / scale
   }
 
+  const getNewValue = (event: any): number => {
+    let newValue = Number(event.target.value)
+    if (log) newValue = Number(linearToLog(newValue).toFixed(precision))
+    return newValue
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let newValue = Number(e.target.value)
-    if (log) newValue = linearToLog(newValue)
-    onChange(newValue, false)
+    const newValue = getNewValue(e)
+    if (value !== newValue) onChange(newValue, false)
   }
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e: React.MouseEvent<HTMLInputElement>) => {
     if (!dragging.current) return
     dragging.current = false
-    onChange(value, true)
+    const newValue = getNewValue(e)
+    if (value !== newValue) onChange(newValue, true)
   }
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = (e: React.TouchEvent<HTMLInputElement>) => {
     if (!dragging.current) return
     dragging.current = false
-    onChange(value, true)
+    const newValue = getNewValue(e)
+    if (value !== newValue) onChange(newValue, true)
   }
 
   const handleMouseDown = () => (dragging.current = true)
   const handleTouchStart = () => (dragging.current = true)
 
-  const sliderValue = log ? logToLinear(value) : value
+  const sliderValue = log ? logToLinear(value).toFixed(precision) : value
 
   const calcPercentage = () => {
     if (log) {
@@ -71,7 +80,7 @@ const SliderInput = ({
       const logMax = Math.log(max)
       return ((Math.log(value) - logMin) / (logMax - logMin)) * 100
     } else {
-      return ((sliderValue - min) / (max - min)) * 100
+      return ((Number(sliderValue) - min) / (max - min)) * 100
     }
   }
 
@@ -81,6 +90,7 @@ const SliderInput = ({
 
   const fillStart = percentage < zeroPercentage ? percentage : zeroPercentage
   const fillEnd = percentage < zeroPercentage ? zeroPercentage : percentage
+  // const fillColor = disabled ? tailwindColors.black : tailwindColors.cyan[700]
   const fillColor = disabled
     ? tailwindColors.black
     : log

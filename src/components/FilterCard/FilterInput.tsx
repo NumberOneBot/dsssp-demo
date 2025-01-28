@@ -43,9 +43,7 @@ const FilterInput = ({
   }
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      validateInput()
-    }
+    if (e.key === 'Enter') validateInput()
   }
 
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
