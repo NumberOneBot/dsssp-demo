@@ -20,6 +20,16 @@ const isSafari = () => {
   )
 }
 
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
+
+const getLabelName = (type: FilterType) => {
+  return capitalize(type.toLowerCase())
+    .replace(/([wh])shelf/, '$1 Shelf')
+    .replace(/([wh])pass/, '$1 Pass')
+    .replace(/1/g, ' ¹')
+    .replace(/2/g, ' ²')
+}
+
 const FilterSelect = ({
   color,
   filter,
@@ -61,9 +71,9 @@ const FilterSelect = ({
             <option
               key={type}
               value={type}
-              className="bg-zinc-950 text-white text-sm font-[dsssp,sans-serif]"
+              className="bg-zinc-950 active:bg-blue-400 text-white text-sm font-[dsssp,sans-serif]"
               dangerouslySetInnerHTML={{
-                __html: `&nbsp;${safariBrowser ? '' : getIconSymbol(type)} ${type}&nbsp;`
+                __html: `&nbsp;${safariBrowser ? '' : getIconSymbol(type)} ${getLabelName(type)}&nbsp;`
               }}
             ></option>
           ))}

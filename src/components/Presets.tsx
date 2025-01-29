@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import LeftArrowIcon from '../assets/left-arrow.svg?react'
 import RightArrowIcon from '../assets/right-arrow.svg?react'
+import SelectArrowIcon from '../assets/select-arrow.svg?react'
 import presets from '../configs/presets'
 
 export const buttonClasses =
@@ -22,6 +23,7 @@ const PresetControl = ({
     prevIndex: number
   ) => void
 }) => {
+  const [opened, setOpened] = useState<boolean>(false)
   const [presetIndex, setPresetIndex] = useState(0)
 
   const handlePrevClick = () => {
@@ -40,6 +42,15 @@ const PresetControl = ({
     onPresetChange(presets[presetIndex].filters, presetIndex, presetIndex)
   }
 
+  const handlePresetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setOpened(false)
+    const newIndex = presets.findIndex(
+      (preset) => preset.name === e.target.value
+    )
+    onPresetChange(presets[newIndex].filters, newIndex, presetIndex)
+    setPresetIndex(newIndex)
+  }
+
   return (
     <div
       className={clsx('flex flex-row gap-3 transition-opacity duration-150', {
@@ -48,8 +59,35 @@ const PresetControl = ({
       })}
     >
       <div className="flex flex-row border rounded-sm border-zinc-800 relative">
-        <div className="w-[140px] py-1 px-3 text-center">
-          {presets[presetIndex].name}
+        <div className="w-[140px] py-1 px-3 text-center relative">
+          <select
+            onBlur={() => setOpened(false)}
+            onFocus={() => setOpened(true)}
+            onMouseDown={() => setOpened(true)}
+            onChange={handlePresetChange}
+            value={presets[presetIndex].name}
+            className="bg-transparent text-transparent appearance-none text-align-center w-[92px] h-full px-1 top-0 left-6 cursor-pointer absolute focus:outline-none focus:ring-0"
+          >
+            {presets.map((preset) => (
+              <option
+                key={preset.name}
+                value={preset.name}
+                className="bg-zinc-950 text-white text-sm text-align-center"
+              >
+                &nbsp;{preset.name}
+              </option>
+            ))}
+          </select>
+          <div className="flex gap-2 flex-row justify-center items-center">
+            {presets[presetIndex].name}
+            <div
+              className={clsx('pt-0.5 pointer-events-none z-10', {
+                'text-sky-500': opened
+              })}
+            >
+              <SelectArrowIcon className="w-3 h-3" />
+            </div>
+          </div>
         </div>
 
         <button
