@@ -12,8 +12,8 @@ import { useState } from 'react'
 import NavBar from './components/NavBar'
 
 const preset: GraphFilter[] = [
-  { freq: 16, gain: -4, q: 0.7, type: 'PEAK' },
-  { freq: 40, gain: 3, q: 0.7, type: 'PEAK' },
+  { freq: 26, gain: -4, q: 0.7, type: 'PEAK' },
+  { freq: 60, gain: 3, q: 0.7, type: 'PEAK' },
   { freq: 350, gain: -3.5, q: 0.7, type: 'PEAK' },
   { freq: 750, gain: 5.5, q: 0.7, type: 'PEAK' },
   { freq: 4400, gain: 2, q: 0.7, type: 'PEAK' }
@@ -23,7 +23,7 @@ const graphTheme: GraphThemeOverride = {
   background: {
     grid: {
       dotted: true,
-      lineColor: '#8a8d90',
+      lineColor: '#4a4d50',
       lineWidth: { center: 1, border: 0 }
     },
     gradient: {
@@ -37,11 +37,11 @@ const graphTheme: GraphThemeOverride = {
 const graphScale = {
   minGain: -12,
   maxGain: 12,
-  minFreq: 10,
+  minFreq: 20,
   maxFreq: 20000,
   dbSteps: 12,
   octaveTicks: 0,
-  octaveLabels: [10, 100, 1000, 5000]
+  octaveLabels: [20, 125, 1000, 5000]
 }
 
 const Demo2 = () => {
