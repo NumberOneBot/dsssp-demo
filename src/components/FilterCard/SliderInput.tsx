@@ -104,8 +104,8 @@ const SliderInput = ({
     : log
       ? tailwindColors.cyan[700]
       : value > 0
-        ? tailwindColors.green[700]
-        : tailwindColors.red[800]
+        ? tailwindColors.amber[800]
+        : tailwindColors.lime[700]
 
   return (
     <div>
