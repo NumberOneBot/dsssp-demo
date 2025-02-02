@@ -1,3 +1,5 @@
+import '@fontsource/poppins/index.css'
+
 import {
   FrequencyResponseGraph,
   CompositeCurve,
@@ -12,10 +14,10 @@ import { useState } from 'react'
 import NavBar from './components/NavBar'
 
 const preset: GraphFilter[] = [
-  { freq: 26, gain: -4, q: 0.7, type: 'PEAK' },
-  { freq: 60, gain: 3, q: 0.7, type: 'PEAK' },
-  { freq: 350, gain: -3.5, q: 0.7, type: 'PEAK' },
-  { freq: 750, gain: 5.5, q: 0.7, type: 'PEAK' },
+  { freq: 80, gain: 0, q: 0.7, type: 'HIGHPASS1' },
+  { freq: 40, gain: 3.5, q: 0.7, type: 'PEAK' },
+  { freq: 300, gain: -4, q: 0.7, type: 'PEAK' },
+  { freq: 1000, gain: 6, q: 0.7, type: 'PEAK' },
   { freq: 2400, gain: -7, q: 0.7, type: 'PEAK' }
 ]
 
@@ -27,10 +29,15 @@ const graphTheme: GraphThemeOverride = {
       lineWidth: { border: 0 }
     },
     gradient: {
-      start: '#1d242d',
-      stop: '#080c12'
+      start: '#080c10',
+      stop: '#233546',
+      direction: 'DIAGONAL_BL_TR'
     },
-    label: { color: '#61646e', fontSize: 8 }
+    label: {
+      color: '#959da9',
+      fontSize: 10,
+      fontFamily: 'Poppins,sans-serif'
+    }
   }
 }
 
@@ -41,7 +48,7 @@ const graphScale = {
   maxFreq: 20000,
   dbSteps: 4,
   octaveTicks: 6,
-  octaveLabels: [100, 1000, 10000]
+  octaveLabels: [20, 100, 1000, 10000]
 }
 
 const Demo2 = () => {
@@ -66,17 +73,17 @@ const Demo2 = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-[#2b2f37] text-white">
-      <div className="w-[408px] flex flex-col gap-4 p-2 pt-8">
-        <div className="border-2 border-black overflow-hidden rounded-xl shadow-[0_10px_20px_10px_#0002,0_1px_2px_1px_#FFF2]">
+      <div className="w-[468px] flex flex-col gap-4 p-2 pt-8">
+        <div className="border-[2.5px] border-black relative overflow-hidden rounded-xl shadow-[0_8px_16px_8px_#0002,0_1px_3px_1px_#FFF2]">
           <FrequencyResponseGraph
-            width={400}
-            height={200}
+            width={460}
+            height={220}
             scale={graphScale}
             theme={graphTheme}
           >
             <FilterGradient
               fill
-              opacity={0.1}
+              opacity={0.2}
               color="#71abe0"
               id="composite-curve"
             />
@@ -95,7 +102,7 @@ const Demo2 = () => {
                 key={index}
                 index={index}
                 filter={filter}
-                radius={3}
+                radius={4}
                 color="#b3ddf3"
                 dragColor="#ffffff"
                 activeColor="#ffffff"
@@ -109,9 +116,11 @@ const Demo2 = () => {
               />
             ))}
           </FrequencyResponseGraph>
+          <div className="absolute top-0 right-0 p-1 px-3 text-[#ffffff] text-lg font-[poppins,sans-serif] font-semibold text-italic">
+            Analyzer
+          </div>
         </div>
 
-        <h1 className="text-2xl font-bold mt-4">Demo 2</h1>
         <NavBar />
       </div>
     </div>

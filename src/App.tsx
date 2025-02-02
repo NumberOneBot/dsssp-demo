@@ -20,7 +20,6 @@ import { customPreset } from './configs/presets'
 import scale from './configs/scale'
 import theme from './configs/theme'
 
-
 function App() {
   const calcPresetCoefficients = (filters: GraphFilter[]) =>
     filters.map((filter) => {

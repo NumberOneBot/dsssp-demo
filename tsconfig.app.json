@@ -1,11 +1,17 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    /* Test with local library bundle */
+    // "paths": {
+    //   "dsssp": ["../dsssp-io/dist"],
+    //   "dsssp/*": ["../dsssp-io/dist/*"]
+    // },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
