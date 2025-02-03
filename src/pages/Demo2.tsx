@@ -18,8 +18,8 @@ const colors = [
   '#fdb219',
   '#f3782b',
   '#ec5327',
-  '#d54232',
-  '#a65e52',
+  '#d53264',
+  '#9f6e78',
   '#5b8885',
   '#2aa2a3'
 ]
@@ -44,11 +44,26 @@ const graphTheme: GraphThemeOverride = {
   },
   curve: {
     width: 2,
-    opacity: 1,
-    color: '#ffe481'
+    color: '#b29aff'
   },
   filters: {
-    gradientOpacity: 0.8,
+    gradientOpacity: 0.6,
+    curve: {
+      opacity: { normal: 0.1, active: 1 }
+    },
+    point: {
+      radius: 12,
+      backgroundOpacity: {
+        normal: 1,
+        active: 1,
+        drag: 1
+      },
+      label: {
+        fontSize: 18,
+        fontFamily: 'Poppins,sans-serif',
+        color: '#ffffff'
+      }
+    },
     colors: colors.map((c) => ({
       point: c,
       curve: c,
