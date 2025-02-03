@@ -150,7 +150,7 @@ const Demo2 = () => {
               />
             ))}
           </FrequencyResponseGraph>
-          <div className="absolute pointer-events-none top-0 right-0 p-1 px-3 text-[#b29aff] text-xl font-[poppins,sans-serif] font-semibold text-italic">
+          <div className="absolute pointer-events-none top-0 right-0 p-2 px-4 text-[#b29aff] text-xl font-[poppins,sans-serif] font-semibold text-italic">
             Harman Curve
           </div>
         </div>
