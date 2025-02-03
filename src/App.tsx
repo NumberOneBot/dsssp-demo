@@ -19,6 +19,7 @@ import { Header, FilterCard } from './components'
 import { customPreset } from './configs/presets'
 import scale from './configs/scale'
 import theme from './configs/theme'
+import NavBar from './pages/components/NavBar'
 
 function App() {
   const calcPresetCoefficients = (filters: GraphFilter[]) =>
@@ -57,10 +58,6 @@ function App() {
       return newFilters
     })
   }
-
-  // const getLabel = (index: number) => {
-  //   return String.fromCharCode(65 + index)
-  // }
 
   const handleMouseLeave = () => {
     if (!dragging) setActiveIndex(-1)
@@ -158,6 +155,7 @@ function App() {
           ))}
         </div>
       </div>
+      <NavBar />
     </div>
   )
 }

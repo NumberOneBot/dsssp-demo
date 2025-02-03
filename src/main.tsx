@@ -4,9 +4,9 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 
 import App from './App.tsx'
-import Demo2 from './pages/Demo2'
-import Demo3 from './pages/Demo3'
-import Demo4 from './pages/Demo4'
+import Demo2 from './pages/Demo2.tsx'
+import Demo3 from './pages/Demo3.tsx'
+import Demo4 from './pages/Demo4.tsx'
 
 import './main.css'
 

@@ -1,58 +1,81 @@
-import '@fontsource/poppins/index.css'
-
 import {
-  FrequencyResponseGraph,
   CompositeCurve,
+  type FilterChangeEvent,
+  FilterCurve,
   FilterGradient,
   FilterPoint,
-  type FilterChangeEvent,
-  type GraphFilter,
+  FrequencyResponseGraph,
+  type GraphScaleOverride,
   type GraphThemeOverride
 } from 'dsssp'
 import { useState } from 'react'
 
+import { customPreset } from '../configs/presets'
+
 import NavBar from './components/NavBar'
 
-const preset: GraphFilter[] = [
-  { freq: 80, gain: 0, q: 0.7, type: 'HIGHPASS1' },
-  { freq: 40, gain: 3.5, q: 0.7, type: 'PEAK' },
-  { freq: 300, gain: -4, q: 0.7, type: 'PEAK' },
-  { freq: 1000, gain: 6, q: 0.7, type: 'PEAK' },
-  { freq: 2400, gain: -7, q: 0.7, type: 'PEAK' }
+const colors = [
+  '#fdb219',
+  '#f3782b',
+  '#ec5327',
+  '#d54232',
+  '#a65e52',
+  '#5b8885',
+  '#2aa2a3'
 ]
 
 const graphTheme: GraphThemeOverride = {
   background: {
     grid: {
       dotted: true,
-      lineColor: '#47464b',
-      lineWidth: { border: 0 }
+      lineColor: '#3d4488',
+      lineWidth: { minor: 0.5, major: 0.5, center: 0.5, border: 0 }
     },
     gradient: {
-      start: '#080c10',
-      stop: '#233546',
-      direction: 'DIAGONAL_BL_TR'
+      stop: '#35184b',
+      start: '#08080e',
+      direction: 'HORIZONTAL'
     },
     label: {
-      color: '#959da9',
+      color: '#3d4488',
       fontSize: 10,
       fontFamily: 'Poppins,sans-serif'
     }
+  },
+  curve: {
+    width: 2,
+    opacity: 1,
+    color: '#ffe481'
+  },
+  filters: {
+    gradientOpacity: 0.8,
+    colors: colors.map((c) => ({
+      point: c,
+      curve: c,
+      gradient: c
+    }))
   }
 }
 
-const graphScale = {
-  minGain: -12,
-  maxGain: 12,
-  minFreq: 20,
-  maxFreq: 20000,
-  dbSteps: 4,
+const graphScale: GraphScaleOverride = {
+  minGain: -10,
+  maxGain: 10,
+  dbSteps: 5,
   octaveTicks: 6,
-  octaveLabels: [20, 100, 1000, 10000]
+  octaveLabels: [20, 50, 100, 500, 1000, 5000, 10000]
 }
 
 const Demo2 = () => {
-  const [filters, setFilters] = useState(preset)
+  const [filters, setFilters] = useState(customPreset)
+  const [activeIndex, setActiveIndex] = useState<number>(-1)
+
+  const handleMouseLeave = () => {
+    setActiveIndex(-1)
+  }
+
+  const handleMouseEnter = ({ index }: { index: number }) => {
+    setActiveIndex(index)
+  }
 
   const handleFilterChange = (filterEvent: FilterChangeEvent) => {
     const { index, ...filter } = filterEvent
@@ -64,63 +87,54 @@ const Demo2 = () => {
     })
   }
 
-  const glowFilter = {
-    filter: `
-      drop-shadow(0 0 1px #b7cbe7)
-      drop-shadow(0 0 3px #b7cbe7)
-    `
+  const getLabel = (index: number) => {
+    return String.fromCharCode(65 + index)
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-[#2b2f37] text-white">
-      <div className="w-[468px] flex flex-col gap-4 p-2 pt-8">
-        <div className="border-[2.5px] border-black relative overflow-hidden rounded-xl shadow-[0_8px_16px_8px_#0002,0_1px_3px_1px_#FFF2]">
+    <div className="flex min-h-screen flex-col items-center bg-black text-white">
+      <div className="w-[840px] flex flex-col pt-8">
+        <div className="overflow-hidden rounded-xl">
           <FrequencyResponseGraph
-            width={460}
-            height={220}
-            scale={graphScale}
+            width={840}
+            height={480}
             theme={graphTheme}
+            scale={graphScale}
           >
-            <FilterGradient
-              fill
-              opacity={0.2}
-              color="#71abe0"
-              id="composite-curve"
-            />
-            <CompositeCurve
-              color="#71abe0"
-              filters={filters}
-              gradientId="composite-curve"
-            />
-            <CompositeCurve
-              color="#71abe0"
-              filters={filters}
-              style={glowFilter}
-            />
+            {filters.map((filter, index) => (
+              <>
+                <FilterGradient
+                  key={index}
+                  index={index}
+                  filter={filter}
+                  id={`filter-${index}`}
+                />
+
+                <FilterCurve
+                  showPin
+                  key={index}
+                  index={index}
+                  filter={filter}
+                  active={activeIndex === index}
+                  gradientId={`filter-${index}`}
+                />
+              </>
+            ))}
+            <CompositeCurve filters={filters} />
             {filters.map((filter, index) => (
               <FilterPoint
                 key={index}
                 index={index}
                 filter={filter}
-                radius={4}
-                color="#b3ddf3"
-                dragColor="#ffffff"
-                activeColor="#ffffff"
-                background="#b3ddf3"
-                dragBackground="#ffffff"
-                activeBackground="#ffffff"
-                backgroundOpacity={1}
-                dragBackgroundOpacity={1}
-                activeBackgroundOpacity={1}
+                label={getLabel(index)}
+                active={activeIndex === index}
+                onEnter={handleMouseEnter}
+                onLeave={handleMouseLeave}
                 onChange={handleFilterChange}
               />
             ))}
           </FrequencyResponseGraph>
-          <div className="absolute top-0 right-0 p-1 px-3 text-[#ffffff] text-lg font-[poppins,sans-serif] font-semibold text-italic">
-            Analyzer
-          </div>
         </div>
-
         <NavBar />
       </div>
     </div>
