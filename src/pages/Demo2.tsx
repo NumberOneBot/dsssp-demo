@@ -10,7 +10,7 @@ import {
 } from 'dsssp'
 import { useState } from 'react'
 
-import { customPreset } from '../configs/presets'
+import { harmanPreset } from '../configs/presets'
 
 import NavBar from './components/NavBar'
 
@@ -73,15 +73,16 @@ const graphTheme: GraphThemeOverride = {
 }
 
 const graphScale: GraphScaleOverride = {
-  minGain: -10,
-  maxGain: 10,
-  dbSteps: 5,
+  minGain: -12,
+  maxGain: 12,
+  dbSteps: 4,
+  minFreq: 10,
   octaveTicks: 6,
-  octaveLabels: [20, 50, 100, 500, 1000, 5000, 10000]
+  octaveLabels: [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000]
 }
 
 const Demo2 = () => {
-  const [filters, setFilters] = useState(customPreset)
+  const [filters, setFilters] = useState(harmanPreset)
   const [activeIndex, setActiveIndex] = useState<number>(-1)
 
   const handleMouseLeave = () => {
@@ -109,7 +110,7 @@ const Demo2 = () => {
   return (
     <div className="flex min-h-screen flex-col items-center bg-black text-white">
       <div className="w-[840px] flex flex-col pt-8">
-        <div className="overflow-hidden rounded-xl">
+        <div className="overflow-hidden rounded-xl relative">
           <FrequencyResponseGraph
             width={840}
             height={480}
@@ -149,6 +150,9 @@ const Demo2 = () => {
               />
             ))}
           </FrequencyResponseGraph>
+          <div className="absolute pointer-events-none top-0 right-0 p-1 px-3 text-[#b29aff] text-xl font-[poppins,sans-serif] font-semibold text-italic">
+            Harman Curve
+          </div>
         </div>
         <NavBar />
       </div>
