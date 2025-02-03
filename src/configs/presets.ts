@@ -61,13 +61,13 @@ export const vocalPreset: GraphFilter[] = [
 ]
 
 export const harmanPreset: GraphFilter[] = [
-  { freq: 105, gain: +5.5, q: 0.7, type: 'LOWSHELF1' },
-  { freq: 200, gain: +2.5, q: 1.4, type: 'PEAK' },
-  { freq: 1000, gain: -1.5, q: 1.4, type: 'PEAK' },
-  { freq: 3000, gain: +2.0, q: 1.4, type: 'PEAK' },
-  { freq: 6000, gain: +3.0, q: 1.4, type: 'PEAK' },
-  { freq: 10000, gain: +4.0, q: 0.7, type: 'HIGHSHELF1' },
-  { freq: 20, gain: 0.0, q: 0.7, type: 'HIGHPASS2' }
+  { freq: 180, gain: -5.0, q: 0.8, type: 'PEAK' },
+  { freq: 10800, gain: -6.3, q: 2.4, type: 'PEAK' },
+  { freq: 120, gain: +8.1, q: 0.7, type: 'LOWSHELF1' },
+  { freq: 2740, gain: +4.4, q: 2.4, type: 'PEAK' },
+  { freq: 4100, gain: +8.0, q: 1.8, type: 'PEAK' },
+  { freq: 7900, gain: +6.8, q: 2.0, type: 'PEAK' },
+  { freq: 13000, gain: 0, q: 0.7, type: 'LOWPASS2' }
 ]
 
 export const flatPreset: GraphFilter[] = [

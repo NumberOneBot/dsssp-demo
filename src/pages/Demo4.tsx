@@ -1,5 +1,3 @@
-import '@fontsource/poppins/index.css'
-
 import {
   FrequencyResponseGraph,
   CompositeCurve,

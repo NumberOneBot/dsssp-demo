@@ -73,10 +73,9 @@ const graphTheme: GraphThemeOverride = {
 }
 
 const graphScale: GraphScaleOverride = {
-  minGain: -12,
-  maxGain: 12,
+  minGain: -20,
+  maxGain: 20,
   dbSteps: 4,
-  minFreq: 10,
   octaveTicks: 6,
   octaveLabels: [10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000]
 }

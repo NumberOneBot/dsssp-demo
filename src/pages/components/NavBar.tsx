@@ -1,6 +1,6 @@
 const NavBar = () => {
   return (
-    <nav className="mt-8 space-x-4 font-semibold text-lg text-center w-full">
+    <nav className="mt-8 space-x-4 font-[poppins,sans-serif] font-semibold text-lg text-center w-full">
       <a
         href="#"
         className="hover:text-blue-400"
