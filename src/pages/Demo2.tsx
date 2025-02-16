@@ -108,7 +108,7 @@ const Demo2 = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-black text-white">
-      <div className="w-[840px] flex flex-col pt-8">
+      <div className="w-[840px] flex flex-col pt-1">
         <div className="overflow-hidden rounded-xl relative">
           <FrequencyResponseGraph
             width={840}
