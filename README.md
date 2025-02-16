@@ -1,6 +1,6 @@
 # Demo Project of the DSSSP: React Library of Audio Processing and Visualization
 
-This is the collection of demos for the DSSSP library. Explore various themes and configurations across four demo setups bundled as a single React application.
+This is the collection of demos for the DSSSP library. Explore various themes and configurations across four setups bundled as a single React application.
 
 For more details, visit the original [repository](https://github.com/numberonebot/dsssp) of the DSSSP library and its [documentation](https://dsssp.io/docs).
 
