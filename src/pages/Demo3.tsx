@@ -11,7 +11,7 @@ import {
 } from 'dsssp'
 import { useState } from 'react'
 
-import { customPreset } from '../configs/presets'
+import { excitedPreset } from '../configs/presets'
 
 import NavBar from './components/NavBar'
 
@@ -78,7 +78,7 @@ const graphScale: GraphScaleOverride = {
 
 const Demo4 = () => {
   const [dragging, setDragging] = useState(false)
-  const [filters, setFilters] = useState(customPreset)
+  const [filters, setFilters] = useState(excitedPreset)
   const [activeIndex, setActiveIndex] = useState<number>(-1)
 
   const handleMouseLeave = () => {

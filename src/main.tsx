@@ -9,6 +9,7 @@ import App from './App.tsx'
 import Demo2 from './pages/Demo2.tsx'
 import Demo3 from './pages/Demo3.tsx'
 import Demo4 from './pages/Demo4.tsx'
+import Demo5 from './pages/Demo5.tsx'
 
 import './main.css'
 
@@ -32,6 +33,10 @@ export const router = createHashRouter([
   {
     path: '/demo4',
     element: <Demo4 />
+  },
+  {
+    path: '/demo5',
+    element: <Demo5 />
   }
 ])
 
