@@ -116,7 +116,7 @@ const Demo4 = () => {
                   index={index}
                   filter={filter}
                   gradientId={`filter-${index}`}
-                  easing="easeInOut"
+                  easing="easeOut"
                   duration={300}
                   animate
                 />
@@ -133,7 +133,7 @@ const Demo4 = () => {
               lineWidth={1}
               filters={filters}
               gradientId="composite-curve"
-              easing="easeInOut"
+              easing="easeOut"
               duration={300}
               animate
             />
