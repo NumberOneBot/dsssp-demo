@@ -36,6 +36,8 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3003,
       open: true,
+      host: true,
+      cors: true,
       historyApiFallback: true
     },
     build: {

@@ -90,7 +90,7 @@ const Demo5 = () => {
             gradientId="composite-curve"
           />
           <CompositeCurve
-            color="#71abe0"
+            color="#ffffff"
             filters={filters}
             style={glowFilter}
           />
