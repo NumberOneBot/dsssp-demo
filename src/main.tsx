@@ -10,6 +10,7 @@ import Demo2 from './pages/Demo2.tsx'
 import Demo3 from './pages/Demo3.tsx'
 import Demo4 from './pages/Demo4.tsx'
 import Demo5 from './pages/Demo5.tsx'
+import LandingSplash from './pages/LandingSplash.tsx'
 
 import './main.css'
 
@@ -37,6 +38,10 @@ export const router = createHashRouter([
   {
     path: '/demo5',
     element: <Demo5 />
+  },
+  {
+    path: '/landing',
+    element: <LandingSplash />
   }
 ])
 
