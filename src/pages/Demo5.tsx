@@ -71,7 +71,9 @@ const Demo5 = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-[#2b2f37] text-white">
-      <div className="mt-8 border-[2.5px] border-black relative overflow-hidden rounded-xl shadow-[0_8px_16px_8px_#0002,0_1px_3px_1px_#FFF3]">
+      <div className="w-[840px] flex flex-col pt-1">
+        <div className="h-[480px] flex items-center justify-center">
+          <div className="border-[2.5px] border-black relative overflow-hidden rounded-xl shadow-[0_8px_16px_8px_#0002,0_1px_3px_1px_#FFF3]">
         <FrequencyResponseGraph
           width={460}
           height={220}
@@ -116,9 +118,11 @@ const Demo5 = () => {
         <div className="absolute pointer-events-none top-0 right-0 p-1 px-3 text-[#ffffff] text-lg font-[poppins,sans-serif] font-semibold text-italic">
           Analyzer
         </div>
-      </div>
+          </div>
+        </div>
 
-      <NavBar />
+        <NavBar />
+      </div>
     </div>
   )
 }
