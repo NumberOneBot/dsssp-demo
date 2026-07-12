@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@fontsource/poppins": "^5.2.7",
-    "dsssp": "^0.7.0",
+    "dsssp": "^0.8.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-error-boundary": "^6.1.2",
